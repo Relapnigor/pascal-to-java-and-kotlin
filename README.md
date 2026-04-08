@@ -1,8 +1,8 @@
 # Projekt konwertera Pascala do Javy oraz Kotlina
 
 ## Autorzy:
-Maciej Dziobek: mdziobek@student.agh.edu.pl
-Robert Filas: rfilas@student.agh.edu.pl
+- Maciej Dziobek: mdziobek@student.agh.edu.pl
+- Robert Filas: rfilas@student.agh.edu.pl
 
 ## Założenia programu:
 Program ma na celu konwersje wybranego kodu w języku Pascal (z pewnymi rozszerzeniami) na kody w językach Java oraz Kotlin.
