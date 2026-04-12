@@ -1,0 +1,8 @@
+var_section: "var" var_decl+
+
+var_decl: name_list ":" TYPE ";"
+
+name_list: NAME ("," NAME)*
+
+%import .types (TYPE)
+%import .tokens (NAME)

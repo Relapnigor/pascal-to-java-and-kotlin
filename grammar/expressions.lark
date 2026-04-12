@@ -1,0 +1,20 @@
+?expr: expr "+" term -> add
+     | expr "-" term -> sub
+     | term
+
+?term: term "*" factor -> mul
+     | term "/" factor -> div
+     | term "div" factor -> int_div
+     | term "mod" factor -> mod
+     | factor
+
+?factor: "-" factor                 -> neg
+       | NAME "(" arg_list? ")"     -> func_call
+       | NUMBER
+       | NAME
+       | STRING
+       | "(" expr ")"
+
+arg_list: expr ("," expr)*
+
+%import .tokens (NUMBER, NAME, STRING)

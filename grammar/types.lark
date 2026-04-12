@@ -1,0 +1,5 @@
+TYPE: "integer"i
+    | "real"i
+    | "string"i
+    | "char"i
+    | "boolean"i

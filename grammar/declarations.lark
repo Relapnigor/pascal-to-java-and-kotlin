@@ -1,0 +1,12 @@
+function_decl: "function" NAME "(" param_list? ")" ":" TYPE ";" function_body ";"
+
+procedure_decl: "procedure" NAME "(" param_list? ")" ";" procedure_body ";"
+
+param_list: param_decl (";" param_decl)*
+
+param_decl: name_list ":" TYPE
+
+%import .var_section (var_section, name_list)
+%import .types (TYPE)
+%import .tokens (NAME)
+%import .bodies (function_body, procedure_body)

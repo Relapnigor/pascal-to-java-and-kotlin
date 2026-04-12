@@ -1,0 +1,7 @@
+STRING: /'[^']*'/
+
+%import common.NUMBER
+%import common.CNAME -> NAME
+
+COMMENT1: /\{[^}]*\}/
+COMMENT2: /\(\*.*?\*\)/s

@@ -1,0 +1,26 @@
+block: "begin" stmt_list "end"
+
+stmt_list: statement (";" statement)* ";"?
+
+statement: NAME ":=" expr                      -> assignment
+         | NAME "(" arg_list? ")"              -> proc_call
+         | if_statement
+         | while_statement
+         | for_statement
+         | repeat_statement
+         | "return" expr                       -> return_statement
+         | block
+
+if_statement: "if" condition "then" statement "else" statement -> if_else
+            | "if" condition "then" statement                  -> if_then
+
+while_statement: "while" condition "do" statement
+
+for_statement: "for" NAME ":=" expr "to" expr "do" statement     -> for_to
+             | "for" NAME ":=" expr "downto" expr "do" statement  -> for_downto
+
+repeat_statement: "repeat" stmt_list "until" condition
+
+%import .expressions (expr, arg_list)
+%import .conditions (condition)
+%import .tokens (NAME)

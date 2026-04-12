@@ -1,0 +1,5 @@
+function_body: var_section? block
+procedure_body: var_section? block
+
+%import .blocks (block)
+%import .var_section (var_section)
