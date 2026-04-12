@@ -9,12 +9,13 @@
 ?not_cond: "not" not_cond          -> not
          | cmp_cond
 
-?cmp_cond: expr ">" expr           -> gt
-         | expr "<" expr           -> lt
-         | expr "=" expr           -> eq
-         | expr ">=" expr          -> ge
-         | expr "<=" expr          -> le
-         | expr "!=" expr          -> ne
+?cmp_cond: expr ">" expr   -> gt
+         | expr "<" expr   -> lt
+         | expr "=" expr   -> eq
+         | expr GE expr    -> ge
+         | expr LE expr    -> le
+         | expr NE expr    -> ne
          | "(" condition ")"
 
 %import .expressions (expr)
+%import .tokens (GE, LE, NE)

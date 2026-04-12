@@ -5,3 +5,8 @@ STRING: /'[^']*'/
 
 COMMENT1: /\{[^}]*\}/
 COMMENT2: /\(\*.*?\*\)/s
+
+GE: ">="
+LE: "<="
+NE: "!="
+ASSIGN: ":="
