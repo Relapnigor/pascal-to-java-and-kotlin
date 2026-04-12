@@ -1,28 +1,41 @@
-# Projekt konwertera Pascala do Javy oraz Kotlina
+# 🔄 Konwerter Pascala → Java i Kotlin
 
-## Autorzy:
-- Maciej Dziobek: mdziobek@student.agh.edu.pl
-- Robert Filas: rfilas@student.agh.edu.pl
+## 👥 Autorzy
 
-## Założenia programu:
-Program ma na celu konwersje wybranego kodu w języku Pascal (z pewnymi rozszerzeniami) na kody w językach Java oraz Kotlin.
-Planowane jest utworzenie interfejsu graficznego umożliwiającego wybór pliku do konwersji, a następnie wyświetlenie plików wynikowych z możliwością ich pobrania.
+| Imię i nazwisko | E-mail                      |
+|-----------------|-----------------------------|
+| Maciej Dziobek  | mdziobek@student.agh.edu.pl |
+| Robert Filas    | rfilas@student.agh.edu.pl   |
 
-### Rodzaj translatora:
-Kompilator
+---
 
-### Planowany wynik działania:
-Konwerter Pascala do Javy i Kotlina
+## 📋 Opis projektu
 
-### Planowany język implementacji:
-Python
+Program konwertuje kod źródłowy w języku **Pascal** (z wybranymi rozszerzeniami) na równoważny kod w językach **Java** oraz **Kotlin**.
 
-### Sposób realizacji skanera/parsera:
-Lark
+Planowane jest utworzenie interfejsu graficznego umożliwiającego:
+- wybór pliku wejściowego `.pas` do konwersji,
+- podgląd wygenerowanych plików wynikowych,
+- pobranie plików `.java` oraz `.kt`.
 
-### Tokeny gramatyki
+---
 
-#### Identyfikatory i literały
+## ⚙️ Specyfikacja techniczna
+
+| Parametr            | Wartość                                      |
+|---------------------|----------------------------------------------|
+| Rodzaj translatora  | Kompilator                                   |
+| Język implementacji | Python                                       |
+| Skaner / parser     | [Lark](https://github.com/lark-parser/lark)  |
+| Dane wejściowe      | Kod źródłowy Pascal (`.pas`)                 |
+| Dane wyjściowe      | Kod źródłowy Java (`.java`) i Kotlin (`.kt`) |
+
+---
+
+## 🔤 Tokeny gramatyki
+Cała gramatyka znajduje się w katalogu [grammar](https://github.com/Relapnigor/pascal-to-java-and-kotlin/tree/main/grammar).
+
+### Identyfikatory i literały
 
 | Token    | Wzorzec                                | Opis                                                  |
 |----------|----------------------------------------|-------------------------------------------------------|
@@ -31,7 +44,7 @@ Lark
 | `STRING` | `'[^']*'`                              | Literał tekstowy w apostrofach                        |
 | `TYPE`   | `integer\|real\|string\|char\|boolean` | Nazwa typu danych                                     |
 
-#### Komentarze i białe znaki (ignorowane)
+### Komentarze i białe znaki (ignorowane)
 
 | Token      | Wzorzec      | Opis                                                    |
 |------------|--------------|---------------------------------------------------------|
@@ -39,7 +52,7 @@ Lark
 | `COMMENT2` | `(*...*)`    | Komentarz w nawiasach z gwiazdką, może być wieloliniowy |
 | `WS`       | `[ \t\r\n]+` | Białe znaki — spacje, tabulatory, nowe linie            |
 
-#### Operatory arytmetyczne
+### Operatory arytmetyczne
 
 | Token   | Symbol | Opis                                     |
 |---------|--------|------------------------------------------|
@@ -50,7 +63,7 @@ Lark
 | `DIV`   | `div`  | Dzielenie całkowite                      |
 | `MOD`   | `mod`  | Reszta z dzielenia                       |
 
-#### Operatory porównania
+### Operatory porównania
 
 | Token      | Symbol | Opis               |
 |------------|--------|--------------------|
@@ -61,7 +74,7 @@ Lark
 | `GE`       | `>=`   | Większy lub równy  |
 | `LE`       | `<=`   | Mniejszy lub równy |
 
-#### Operatory logiczne
+### Operatory logiczne
 
 | Token | Symbol | Opis                 |
 |-------|--------|----------------------|
@@ -69,13 +82,13 @@ Lark
 | `OR`  | `or`   | Alternatywa logiczna |
 | `NOT` | `not`  | Negacja logiczna     |
 
-#### Operator przypisania
+### Operator przypisania
 
 | Token    | Symbol | Opis                             |
 |----------|--------|----------------------------------|
 | `ASSIGN` | `:=`   | Przypisanie wartości do zmiennej |
 
-#### Słowa kluczowe
+### Słowa kluczowe
 
 | Token       | Symbol      | Opis                                   |
 |-------------|-------------|----------------------------------------|
@@ -97,7 +110,7 @@ Lark
 | `UNTIL`     | `until`     | Warunek zakończenia pętli `repeat`     |
 | `RETURN`    | `return`    | Zwrócenie wartości z funkcji           |
 
-#### Interpunkcja
+### Interpunkcja
 
 | Token       | Symbol | Opis                                |
 |-------------|--------|-------------------------------------|
