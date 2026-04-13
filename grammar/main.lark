@@ -6,7 +6,7 @@ program_block: var_section? (function_decl | procedure_decl)* block
 
 %import .declarations (function_decl, procedure_decl)
 %import .var_section (var_section)
-%import .blocks (block)
+%import .statements_and_blocks (block)
 %import .tokens (NAME, COMMENT1, COMMENT2)
 
 %import common.WS

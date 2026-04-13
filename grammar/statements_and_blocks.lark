@@ -11,13 +11,11 @@ statement: NAME ASSIGN expr                        -> assignment
          | "return" expr                           -> return_statement
          | block
 
-if_statement: "if" condition "then" statement "else" statement -> if_else
-            | "if" condition "then" statement                  -> if_then
+if_statement: "if" condition "then" statement ("else" statement)? -> if
 
 while_statement: "while" condition "do" statement
 
-for_statement: "for" NAME ASSIGN expr "to" expr "do" statement     -> for_to
-             | "for" NAME ASSIGN expr "downto" expr "do" statement  -> for_downto
+for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" statement     -> for
 
 repeat_statement: "repeat" stmt_list "until" condition
 
