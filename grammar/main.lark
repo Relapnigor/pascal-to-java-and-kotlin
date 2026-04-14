@@ -2,10 +2,11 @@ start: program
 
 program: "program" NAME ";" program_block "."
 
-program_block: var_section? (function_decl | procedure_decl)* block
+program_block: const_section? var_section? (function_decl | procedure_decl)* block
 
 %import .declarations (function_decl, procedure_decl)
 %import .var_section (var_section)
+%import .const_section (const_section)
 %import .statements_and_blocks (block)
 %import .tokens (NAME, COMMENT1, COMMENT2)
 

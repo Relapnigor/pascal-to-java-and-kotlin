@@ -109,6 +109,7 @@ Cała gramatyka znajduje się w katalogu [grammar](https://github.com/Relapnigor
 | `REPEAT`    | `repeat`    | Początek pętli z warunkiem na końcu    |
 | `UNTIL`     | `until`     | Warunek zakończenia pętli `repeat`     |
 | `RETURN`    | `return`    | Zwrócenie wartości z funkcji           |
+| `CONST`     | `const`     | Sekcja deklaracji stałych              |
 
 ### Interpunkcja
 
