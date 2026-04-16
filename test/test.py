@@ -6,8 +6,11 @@ with open("pascal_code.pas", "r") as f:
 parser = Lark.open("../grammar/main.lark", parser="lalr", rel_to=__file__)
 
 tree = parser.parse(pascal_code)
-print(tree.pretty())
+# print(tree.pretty())
 
-tokens = parser.lex(pascal_code)
-for token in tokens:
-    print((token.type, token.value))
+# tokens = parser.lex(pascal_code)
+# for token in tokens:
+#     print((token.type, token.value))
+
+for term in parser.terminals:
+    print(term)

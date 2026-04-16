@@ -10,6 +10,7 @@ var
   flag: Boolean;
   ch: Char;
   name: String;
+  arr: array[1..5] of integer;
 
 { Helper procedure — tests proc_call as statement }
 procedure PrintHeader(title: String);
@@ -85,10 +86,15 @@ end;
 begin
   PrintHeader('Grammar Test');
 
+  arr[1] := 5;
+  arr[2] := 10;
+
   a := 10;
   b := 3;
   c := Add(a, b);
   WriteLn(c);
+
+  c := arr[1] + arr[2];
 
   x := a / b;
   WriteLn(x);

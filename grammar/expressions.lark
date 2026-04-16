@@ -13,6 +13,7 @@
        | NUMBER
        | NAME
        | STRING
+       | NAME "[" expr "]"          -> array_access
        | "(" expr ")"
 
 arg_list: expr ("," expr)*

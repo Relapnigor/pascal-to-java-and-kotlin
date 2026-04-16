@@ -2,7 +2,7 @@ block: "begin" stmt_list "end"
 
 stmt_list: statement (";" statement)* ";"?
 
-statement: NAME ASSIGN expr                        -> assignment
+statement: lvalue ASSIGN expr                        -> assignment
          | NAME "(" arg_list? ")"                  -> proc_call
          | if_statement
          | while_statement
@@ -10,6 +10,9 @@ statement: NAME ASSIGN expr                        -> assignment
          | repeat_statement
          | "return" expr                           -> return_statement
          | block
+
+lvalue: NAME
+        | NAME "[" expr "]"
 
 if_statement: "if" condition "then" statement ("else" statement)? -> if
 
