@@ -1,0 +1,105 @@
+start: program
+
+program: "program" NAME ";" program_block "."
+program_block: const_section? var_section? (function_decl | procedure_decl)* block
+
+const_section: "const" const_decl+
+const_decl: NAME "=" expr ";"
+
+var_section: "var" var_decl+
+var_decl: name_list ":" type ";"
+name_list: NAME ("," NAME)*
+
+function_decl: "function" NAME "(" param_list? ")" ":" type ";" func_body ";"
+procedure_decl: "procedure" NAME "(" param_list? ")" ";" func_body ";"
+param_list: param_decl (";" param_decl)*
+param_decl: name_list ":" type
+func_body: var_section? block
+
+block: "begin" stmt_list "end"
+stmt_list: statement (";" statement)* ";"?
+
+statement: lvalue ASSIGN expr                        -> assignment
+         | NAME "(" arg_list? ")"                  -> proc_call
+         | if_statement
+         | while_statement
+         | for_statement
+         | repeat_statement
+         | "return" expr                           -> return_statement
+         | block
+
+lvalue: NAME
+        | NAME "[" expr "]"
+
+if_statement: "if" condition "then" statement ("else" statement)? -> if
+while_statement: "while" condition "do" statement
+for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" statement     -> for
+repeat_statement: "repeat" stmt_list "until" condition
+
+?expr: expr "+" term -> add
+     | expr "-" term -> sub
+     | term
+
+?term: term "*" factor -> mul
+     | term "/" factor -> div
+     | term "div" factor -> int_div
+     | term "mod" factor -> mod
+     | factor
+
+?factor: "-" factor                 -> neg
+       | NAME "(" arg_list? ")"     -> func_call
+       | NUMBER
+       | NAME
+       | STRING
+       | NAME "[" expr "]"          -> array_access
+       | "(" expr ")"
+
+arg_list: expr ("," expr)*
+
+?condition: or_cond
+
+?or_cond: or_cond "or" and_cond  -> or
+        | and_cond
+
+?and_cond: and_cond "and" not_cond -> and
+         | not_cond
+
+?not_cond: "not" not_cond          -> not
+         | cmp_cond
+
+?cmp_cond: expr ">" expr   -> gt
+         | expr "<" expr   -> lt
+         | expr "=" expr   -> eq
+         | expr GE expr    -> ge
+         | expr LE expr    -> le
+         | expr NE expr    -> ne
+         | "(" condition ")"
+
+?type: TYPE
+    | array_type
+
+array_type: "array" "[" INT RANGE INT "]" "of" type
+INT: /[0-9]+/
+
+TYPE.2: "integer"i
+    | "real"i
+    | "string"i
+    | "char"i
+    | "boolean"i
+
+STRING: /'[^']*'/
+COMMENT1: /\{[^}]*\}/
+COMMENT2: /\(\*.*?\*\)/s
+
+GE: ">="
+LE: "<="
+NE: "!="
+ASSIGN: ":="
+RANGE: ".."
+
+%import common.WS
+%ignore WS
+%ignore COMMENT1
+%ignore COMMENT2
+%import common.NUMBER
+%import common.CNAME -> NAME

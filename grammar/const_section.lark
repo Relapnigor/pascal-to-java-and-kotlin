@@ -1,6 +1,0 @@
-const_section: "const" const_decl+
-
-const_decl: NAME "=" expr ";"
-
-%import .expressions (expr)
-%import .tokens (NAME)

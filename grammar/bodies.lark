@@ -1,4 +1,0 @@
-func_body: var_section? block
-
-%import .statements_and_blocks (block)
-%import .var_section (var_section)
