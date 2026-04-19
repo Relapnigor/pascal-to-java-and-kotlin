@@ -91,11 +91,11 @@ arg_list: expr ("," expr)*
 array_type: "array" "[" INT RANGE INT "]" "of" type
 INT: /[0-9]+/
 
-TYPE.2: "integer"i
-    | "real"i
-    | "string"i
-    | "char"i
-    | "boolean"i
+TYPE.2: /\binteger\b/i
+      | /\breal\b/i
+      | /\bstring\b/i
+      | /\bchar\b/i
+      | /\bboolean\b/i
 
 BOOL.2: "true"i | "false"i
 NULL.2: "null"i
