@@ -151,6 +151,8 @@ begin
 
   CountingDemo(3);
   BooleanDemo(a, b);
+  trueDemo(a,b);
+  breakDemo(a,c);
 
   c := Max(a, b);
   WriteLn(c);

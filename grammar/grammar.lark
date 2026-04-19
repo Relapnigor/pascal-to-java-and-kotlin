@@ -64,8 +64,8 @@ case_label: NUMBER
         | NAME
 case_else: "else" statement ";"?
 
-BREAK.2: "break"i
-CONTINUE.2: "continue"i
+BREAK.2: /\bbreak\b/i
+CONTINUE.2: /\bcontinue\b/i
 
 // Expressions
 ?expr: expr "+" term -> add
@@ -118,7 +118,7 @@ arg_list: expr ("," expr)*
     | array_type
 
 array_type: "array" "[" INT RANGE INT "]" "of" type
-INT: /[0-9]+/
+INT.2: /[0-9]+/
 
 TYPE.2: /\binteger\b/i
       | /\breal\b/i
@@ -126,8 +126,8 @@ TYPE.2: /\binteger\b/i
       | /\bchar\b/i
       | /\bboolean\b/i
 
-BOOL.2: "true"i | "false"i
-NULL.2: "null"i
+BOOL.2: /\btrue\b/i | /\bfalse\b/i
+NULL.2: /\bnull\b/i
 
 STRING: /'[^']*'/
 COMMENT1: /\{[^}]*\}/
