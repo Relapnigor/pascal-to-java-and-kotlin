@@ -31,6 +31,7 @@ statement: lvalue assignment expr                       -> assignment
          | while_statement
          | for_statement
          | repeat_statement
+         | case_statement
          | BREAK                                   -> break_stmt
          | CONTINUE                                -> continue_stmt
          | "return" expr                           -> return_statement
@@ -54,6 +55,14 @@ if_statement: "if" condition "then" statement ("else" statement)? -> if
 while_statement: "while" condition "do" statement
 for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" statement     -> for
 repeat_statement: "repeat" stmt_list "until" condition
+case_statement: "case" expr "of" case_branch+ case_else? "end"
+
+case_branch: case_label_list ":" statement ";"?
+case_label_list: case_label ("," case_label)*
+case_label: NUMBER
+        | STRING
+        | NAME
+case_else: "else" statement ";"?
 
 BREAK.2: "break"i
 CONTINUE.2: "continue"i

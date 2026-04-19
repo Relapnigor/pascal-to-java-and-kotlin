@@ -117,6 +117,16 @@ begin
   c := a^2;
   c := a^(b+4^5);
 
+  case c of
+    1: a := 1;
+    2: begin
+        WriteLn('case 2')
+       end;
+    3,4: a := 3.5;
+    else
+       WriteLn('inne');
+  end;
+
   x := a / b;
   WriteLn(x);
 
