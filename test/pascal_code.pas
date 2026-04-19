@@ -52,6 +52,8 @@ begin
   begin
     WriteLn(i);
     i := i - 1;
+    break;
+    continue;
   end;
 
   { repeat..until }
@@ -102,6 +104,18 @@ begin
   WriteLn(c);
 
   c := arr[1] + arr[2];
+  c += a;
+  c -= b;
+  c *= 2;
+  c /= a + b;
+
+  c++;
+  c--;
+  ++c;
+  --c;
+
+  c := a^2;
+  c := a^(b+4^5);
 
   x := a / b;
   WriteLn(x);

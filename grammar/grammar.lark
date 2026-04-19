@@ -24,32 +24,52 @@ block: "begin" stmt_list "end"
 stmt_list: statement (";" statement)* ";"?
 
 // Statements
-statement: lvalue ASSIGN expr                        -> assignment
+statement: lvalue assignment expr                       -> assignment
+         | inc_dec
          | NAME "(" arg_list? ")"                  -> proc_call
          | if_statement
          | while_statement
          | for_statement
          | repeat_statement
+         | BREAK                                   -> break_stmt
+         | CONTINUE                                -> continue_stmt
          | "return" expr                           -> return_statement
          | block
 
 lvalue: NAME
         | NAME "[" expr "]"
 
+assignment: ASSIGN                                  -> assign
+        | PLUS_ASSIGN                               -> add_assign
+        | MINUS_ASSIGN                              -> sub_assign
+        | MUL_ASSIGN                                -> mul_assign
+        | DIV_ASSIGN                                -> div_assign
+
+inc_dec: lvalue INCREMENT                           -> post_inc
+        | lvalue DECREMENT                          -> post_dec
+        | INCREMENT lvalue                          -> pre_inc
+        | DECREMENT lvalue                          -> pre_dec
+
 if_statement: "if" condition "then" statement ("else" statement)? -> if
 while_statement: "while" condition "do" statement
 for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" statement     -> for
 repeat_statement: "repeat" stmt_list "until" condition
+
+BREAK.2: "break"i
+CONTINUE.2: "continue"i
 
 // Expressions
 ?expr: expr "+" term -> add
      | expr "-" term -> sub
      | term
 
-?term: term "*" factor -> mul
-     | term "/" factor -> div
-     | term "div" factor -> int_div
-     | term "mod" factor -> mod
+?term: term "*" power -> mul
+     | term "/" power -> div
+     | term "div" power -> int_div
+     | term "mod" power -> mod
+     | power
+
+?power: factor POW power -> pow
      | factor
 
 ?factor: "-" factor                 -> neg
@@ -109,6 +129,16 @@ LE: "<="
 NE: "!="
 ASSIGN: ":="
 RANGE: ".."
+
+PLUS_ASSIGN: "+="
+MINUS_ASSIGN: "-="
+MUL_ASSIGN: "*="
+DIV_ASSIGN: "/="
+
+INCREMENT: "++"
+DECREMENT: "--"
+
+POW: "^"
 
 %import common.WS
 %ignore WS
