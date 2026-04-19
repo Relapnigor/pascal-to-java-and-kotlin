@@ -3,13 +3,17 @@ start: program
 program: "program" NAME ";" program_block "."
 program_block: const_section? var_section? (function_decl | procedure_decl)* block
 
+
+// Const declarations
 const_section: "const" const_decl+
 const_decl: NAME "=" expr ";"
 
+// Variable declarations
 var_section: "var" var_decl+
 var_decl: name_list ":" type ";"
 name_list: NAME ("," NAME)*
 
+// Function and procedure declarations
 function_decl: "function" NAME "(" param_list? ")" ":" type ";" func_body ";"
 procedure_decl: "procedure" NAME "(" param_list? ")" ";" func_body ";"
 param_list: param_decl (";" param_decl)*
@@ -19,6 +23,7 @@ func_body: var_section? block
 block: "begin" stmt_list "end"
 stmt_list: statement (";" statement)* ";"?
 
+// Statements
 statement: lvalue ASSIGN expr                        -> assignment
          | NAME "(" arg_list? ")"                  -> proc_call
          | if_statement
@@ -36,6 +41,7 @@ while_statement: "while" condition "do" statement
 for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" statement     -> for
 repeat_statement: "repeat" stmt_list "until" condition
 
+// Expressions
 ?expr: expr "+" term -> add
      | expr "-" term -> sub
      | term
@@ -49,6 +55,8 @@ repeat_statement: "repeat" stmt_list "until" condition
 ?factor: "-" factor                 -> neg
        | NAME "(" arg_list? ")"     -> func_call
        | NUMBER
+       | BOOL
+       | NULL
        | NAME
        | STRING
        | NAME "[" expr "]"          -> array_access
@@ -56,6 +64,7 @@ repeat_statement: "repeat" stmt_list "until" condition
 
 arg_list: expr ("," expr)*
 
+// Conditions
 ?condition: or_cond
 
 ?or_cond: or_cond "or" and_cond  -> or
@@ -75,6 +84,7 @@ arg_list: expr ("," expr)*
          | expr NE expr    -> ne
          | "(" condition ")"
 
+// Tokens
 ?type: TYPE
     | array_type
 
@@ -86,6 +96,9 @@ TYPE.2: "integer"i
     | "string"i
     | "char"i
     | "boolean"i
+
+BOOL.2: "true"i | "false"i
+NULL.2: "null"i
 
 STRING: /'[^']*'/
 COMMENT1: /\{[^}]*\}/

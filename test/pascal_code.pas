@@ -86,8 +86,15 @@ end;
 begin
   PrintHeader('Grammar Test');
 
+  flag := true;
+
+  if flag = true then
+    flag := false;
+
   arr[1] := 5;
   arr[2] := 10;
+
+  a := null;
 
   a := 10;
   b := 3;
