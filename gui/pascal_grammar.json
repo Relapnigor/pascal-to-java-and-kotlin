@@ -1,0 +1,11 @@
+{
+  "keyword" : ["PROGRAM", "CONST", "VAR", "PROCEDURE", "FUNCTION", "BEGIN", "END", "IF", "NOT", "THEN", "ELSE",
+                "RETURN", "WHILE", "DO", "FOR", "TO", "DOWNTO", "REPEAT", "UNTIL" ,"CASE", "AND", "OR", "OF","BOOL",
+                "NULL", "BREAK", "CONTINUE"],
+  "word": ["NAME", "GE", "LE", "NE", "SEMICOLON", "DOT", "EQUAL", "COLON", "COMMA", "LPAR", "RPAR", "LSQB", "RSQB",
+            "PLUS", "MINUS", "STAR", "SLASH", "DIV", "MOD", "POW", "MORETHAN", "LESSTHAN", "ARRAY","RANGE", "ASSIGN",
+            "PLUS_ASSIGN", "MINUS_ASSIGN", "MUL_ASSIGN","DIV_ASSIGN", "INCREMENT", "DECREMENT"],
+  "numeric": ["NUMBER", "INT"],
+  "string": ["STRING"],
+  "type": ["TYPE"]
+}
