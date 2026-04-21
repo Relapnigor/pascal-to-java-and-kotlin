@@ -42,15 +42,15 @@ Cała gramatyka znajduje się w pliku [grammar.lark](https://github.com/Relapnig
 
 ### Identyfikatory i literały
 
-| Token    | Wzorzec                                                                                                                          | Opis                                                        |
-|----------|----------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|
-| `NAME`   | `[A-Za-z_][A-Za-z0-9_]*`                                                                                                         | Identyfikator — nazwa zmiennej, funkcji, procedury lub typu |
-| `NUMBER` | liczby całkowite i rzeczywiste (float, e-notation)                                                                               | Literał liczbowy (ogólny)                                   |
-| `INT`    | `[0-9]+`                                                                                                                         | Literał liczby całkowitej (np. indeksy tablic)              |
-| `STRING` | `'[^']*'`                                                                                                                        | Literał tekstowy                                            |
-| `TYPE`   | `integer \| real                                   \| string \| char \| boolean` (case-insensitive)                              | Typ danych                                                  |
-| `BOOL`   | `true                                                                                               \| false` (case-insensitive) | Literał logiczny                                            |
-| `NULL`   | `null`                                                                                                                           | Wartość pustego wskaźnika                                   |
+| Token    | Wzorzec                                                           | Opis                                                        |
+|----------|-------------------------------------------------------------------|-------------------------------------------------------------|
+| `NAME`   | `[A-Za-z_][A-Za-z0-9_]*`                                          | Identyfikator — nazwa zmiennej, funkcji, procedury lub typu |
+| `NUMBER` | liczby całkowite i rzeczywiste (float, e-notation)                | Literał liczbowy (ogólny)                                   |
+| `INT`    | `[0-9]+`                                                          | Literał liczby całkowitej (np. indeksy tablic)              |
+| `STRING` | `'[^']*'`                                                         | Literał tekstowy                                            |
+| `TYPE`   | `integer \| real \| string \| char \| boolean` (case-insensitive) | Typ danych                                                  |
+| `BOOL`   | `true \| false` (case-insensitive)                                | Literał logiczny                                            |
+| `NULL`   | `null`                                                            | Wartość pustego wskaźnika                                   |
 
 ---
 
