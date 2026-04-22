@@ -118,6 +118,7 @@ arg_list: expr ("," expr)*
          | expr GE expr    -> ge
          | expr LE expr    -> le
          | expr NE expr    -> ne
+         | expr
          | "(" condition ")"
 
 // Tokens

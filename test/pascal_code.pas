@@ -160,4 +160,7 @@ begin
 
   c := CalcDemo(a, b);
   WriteLn(c);
+
+  if True then
+    break;
 end.
