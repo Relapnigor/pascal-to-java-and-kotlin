@@ -14,6 +14,8 @@ class ModernApp2():
         self.app.resizable(True, True)
         self.app.title("Pascal to Kotlin & Java app")
         self.grammar = Grammar()
+        with open("pascal_grammar.json", "r", encoding="utf-8") as f:
+            self.data = json.load(f)
 
         self.menu = CTkFrame(self.app)
         self.menu_config()
@@ -128,13 +130,8 @@ class ModernApp2():
 
 
     def color_pascal(self,file_path):
-        with open("pascal_grammar.json", "r", encoding="utf-8") as f:
-            data = json.load(f)
-
         for token in self.grammar.get_tokens(file_path):
-            for tag in data.keys():
-                if token[0] in data[tag]:
-                    self.textbox.tag_add(tag, f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
+            self.textbox.tag_add(self.data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
 
     def download_java_file(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".txt")
