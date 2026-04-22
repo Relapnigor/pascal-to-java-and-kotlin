@@ -18,13 +18,23 @@ function_decl: "function" NAME "(" param_list? ")" ":" type ";" func_body ";"
 procedure_decl: "procedure" NAME "(" param_list? ")" ";" func_body ";"
 param_list: param_decl (";" param_decl)*
 param_decl: name_list ":" type
-func_body: var_section? block
+func_body: var_section? inner_block
 
 block: "begin" stmt_list "end"
+inner_block: "begin" inner_stmt_list "end"
 stmt_list: statement (";" statement)* ";"?
+inner_stmt_list: inner_statement (";" inner_statement)* ";"?
 
 // Statements
-statement: lvalue assignment expr                       -> assignment
+statement: basic_statement
+         | block
+
+inner_statement: basic_statement
+                | inner_block
+                | BREAK         -> break_stmt
+                | CONTINUE      -> continue_stmt
+
+basic_statement: lvalue assignment expr                       -> assignment
          | inc_dec
          | NAME "(" arg_list? ")"                  -> proc_call
          | if_statement
@@ -32,10 +42,7 @@ statement: lvalue assignment expr                       -> assignment
          | for_statement
          | repeat_statement
          | case_statement
-         | BREAK                                   -> break_stmt
-         | CONTINUE                                -> continue_stmt
          | "return" expr                           -> return_statement
-         | block
 
 lvalue: NAME
         | NAME "[" expr "]"
@@ -51,18 +58,18 @@ inc_dec: lvalue INCREMENT                           -> post_inc
         | INCREMENT lvalue                          -> pre_inc
         | DECREMENT lvalue                          -> pre_dec
 
-if_statement: "if" condition "then" statement ("else" statement)? -> if
-while_statement: "while" condition "do" statement
-for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" statement     -> for
-repeat_statement: "repeat" stmt_list "until" condition
+if_statement: "if" condition "then" inner_statement ("else" inner_statement)? -> if
+while_statement: "while" condition "do" inner_statement
+for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" inner_statement     -> for
+repeat_statement: "repeat" inner_stmt_list "until" condition
 case_statement: "case" expr "of" case_branch+ case_else? "end"
 
-case_branch: case_label_list ":" statement ";"?
+case_branch: case_label_list ":" inner_statement ";"?
 case_label_list: case_label ("," case_label)*
 case_label: NUMBER
         | STRING
         | NAME
-case_else: "else" statement ";"?
+case_else: "else" inner_statement ";"?
 
 BREAK.2: /\bbreak\b/i
 CONTINUE.2: /\bcontinue\b/i

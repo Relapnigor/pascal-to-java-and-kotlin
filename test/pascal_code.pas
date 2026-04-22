@@ -83,6 +83,7 @@ end;
 function CalcDemo(p, q: Integer): Integer;
 begin
   CalcDemo := (p + q) * 2 - p div q + p mod q;
+  break;
 end;
 
 begin
