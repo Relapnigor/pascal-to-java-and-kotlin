@@ -14,7 +14,7 @@ class ModernApp2():
         self.app.resizable(True, True)
         self.app.title("Pascal to Kotlin & Java app")
         self.grammar = Grammar()
-        with open("pascal_grammar.json", "r", encoding="utf-8") as f:
+        with open("../grammar/pascal_grammar.json", "r", encoding="utf-8") as f:
             self.data = json.load(f)
 
         self.menu = CTkFrame(self.app)

@@ -58,9 +58,9 @@ inc_dec: lvalue INCREMENT                           -> post_inc
         | INCREMENT lvalue                          -> pre_inc
         | DECREMENT lvalue                          -> pre_dec
 
-if_statement: "if" condition "then" inner_statement ("else" inner_statement)? -> if
-while_statement: "while" condition "do" inner_statement
-for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" inner_statement     -> for
+if_statement: "if" condition "then" inner_statement ("else" inner_statement)? -> if_stmt
+while_statement: "while" condition "do" inner_statement -> while_stmt
+for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" inner_statement     -> for_stmt
 repeat_statement: "repeat" inner_stmt_list "until" condition
 case_statement: "case" expr "of" case_branch+ case_else? "end"
 
