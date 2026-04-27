@@ -134,10 +134,10 @@ class PascalToKotlin(Transformer):
 
 
 if __name__ == "__main__":
-    with open("pascal_code2.pas", "r") as f:
+    with open("../test/pascal_code2.pas", "r") as f:
         pascal_code = f.read()
 
-    parser = Lark.open("../grammar/grammar.lark", parser="lalr", rel_to=__file__)
+    parser = Lark.open("grammar.lark", parser="lalr", rel_to=__file__)
     tree = parser.parse(pascal_code)
     result = PascalToKotlin().transform(tree)
 
