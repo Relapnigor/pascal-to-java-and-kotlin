@@ -1,0 +1,39 @@
+start: program
+
+program: tokens*
+
+tokens: keyword
+        | TYPE
+        | NAME
+        | NUMBER
+        | OPERATOR
+        | BRAKET
+        | STRING
+        | INTERPUNTIC
+
+keyword: "fun"
+        | "while"
+        | "for"
+        | "if"
+        | "var"
+        | "val"
+        | "else"
+        | "return"
+
+OPERATOR: "+" | "-" | "/" | "*" | "+=" | "-=" | "*=" | "/=" | ">" | "<" | ">=" | "<=" | "==" | "!=" | "="
+
+BRAKET: "[" | "]" | "{" | "}" | "(" | ")"
+
+INTERPUNTIC: ";" | ":" | ","
+
+STRING: /"[^"]*"/
+
+TYPE.2: "Int"
+        | "Float"
+        | "String"
+
+
+%import common.WS
+%ignore WS
+%import common.NUMBER
+%import common.CNAME -> NAME

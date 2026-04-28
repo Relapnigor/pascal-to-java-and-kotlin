@@ -89,6 +89,7 @@ class ModernApp2():
         self.textboxjava.pack(fill="both", expand=True)
         self.textboxkotlin = CTkTextbox(self.kotlinFrame, font=("Cascadia Code", 16), tabs = (self.tabWidth,), state="disabled")
         self.textboxkotlin.pack(fill="both", expand=True)
+        self.color_kot_config()
 
         self.footernotmenu = CTkFrame(self.notmenu)
         self.footernotmenu.grid(column=0, row=2, sticky="nsew")
@@ -128,10 +129,22 @@ class ModernApp2():
         self.textbox.tag_config("keyword", foreground="orange")
 
 
+    def color_kot_config(self):
+        self.textboxkotlin.tag_config("string", foreground="green")
+        self.textboxkotlin.tag_config("keyword", foreground="orange")
+        self.textboxkotlin.tag_config("numeric", foreground="cyan")
+        self.textboxkotlin.tag_config("type", foreground="#167ef5")
+
+
     def color_pascal(self):
         data = self.grammar.get_data()
         for token in self.grammar.get_tokens():
             self.textbox.tag_add(data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
+    def color_kotlin(self, content):
+        data = self.grammar.get_data_k()
+        for token in self.grammar.get_tokens_k(content):
+            self.textboxkotlin.tag_add(data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
+
 
     def download_java_file(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".java")
@@ -163,6 +176,8 @@ class ModernApp2():
 
         self.textboxkotlin.delete("1.0", "end")
         self.textboxkotlin.insert("1.0", kotlin_code)
+
+        self.color_kotlin(kotlin_code)
 
         self.textboxjava.configure(state="disabled")
         self.textboxkotlin.configure(state="disabled")

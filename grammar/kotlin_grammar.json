@@ -1,0 +1,15 @@
+{
+  "NUMBER": "numeric",
+  "NAME": "word",
+  "OPERATOR": "word",
+  "BRAKET": "word",
+  "INTERPUNTIC": "word",
+  "STRING": "string",
+  "TYPE": "type",
+  "FUN": "keyword",
+  "IF": "keyword",
+  "VAR": "keyword",
+  "VAL": "keyword",
+  "ELSE": "keyword",
+  "RETURN": "keyword"
+}
