@@ -133,12 +133,12 @@ class GuiApp:
 
 
     def color_pascal(self):
-        data = self.grammar.get_data()
-        for token in self.grammar.get_tokens():
+        data = self.grammar.get_pascal_style()
+        for token in self.grammar.get_pascal_tokens():
             self.textboxPascal.tag_add(data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
     def color_kotlin(self, content):
-        data = self.grammar.get_data_k()
-        for token in self.grammar.get_tokens_k(content):
+        data = self.grammar.get_kotlin_style()
+        for token in self.grammar.get_kotlin_tokens(content):
             self.textboxKotlin.tag_add(data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
 
 
