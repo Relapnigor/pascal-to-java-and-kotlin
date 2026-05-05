@@ -20,7 +20,7 @@ param_list: param_decl (";" param_decl)*
 param_decl: name_list ":" type
 func_body: var_section? inner_block
 
-block: "begin" stmt_list "end"
+block: "begin" stmt_list? "end"
 inner_block: "begin" inner_stmt_list "end"
 stmt_list: statement (";" statement)* ";"?
 inner_stmt_list: inner_statement (";" inner_statement)* ";"?
