@@ -1,0 +1,65 @@
+start: program
+
+program: tokens*
+
+tokens: KEYWORD
+        | STRING
+        | TYPE
+        | NUMBER
+        | WORD
+
+KEYWORD.2: /\bprogram\b/i
+        | /\bprocedure\b/i
+        | /\bfunction\b/i
+        | /\bwhile\b/i
+        | /\bfor\b/i
+        | /\bif\b/i
+        | /\belse\b/i
+        | /\breturn\b/i
+        | /\btrue\b/i
+        | /\bfalse\b/i
+        | /\bconst\b/i
+        | /\bvar\b/i
+        | /\bbegin\b/i
+        | /\bend\b/i
+        | /\bnot\b/i
+        | /\bthen\b/i
+        | /\bdo\b/i
+        | /\bto\b/i
+        | /\bdownto\b/i
+        | /\brepeat\b/i
+        | /\buntil\b/i
+        | /\bcase\b/i
+        | /\band\b/i
+        | /\bor\b/i
+        | /\bof\b/i
+        | /\bnull\b/i
+        | /\bbreak\b/i
+        | /\bcontinue\b/i
+
+WORD: /[a-zA-Z_][a-zA-Z0-9_]*/                          // Nazwy
+    | /\+=|-=|\*=|\/=|%=|==|!=|>=|<=/                   // Operatory dwuznakowe
+    | /\.\./                                            // Dwie kropki
+    | /[\+\-\/\*%\^><=\[\]\{\}\(\);:,.\!"#\$&\?@|\\~`]/   // Pojedyncze znaki
+    | "'"
+
+
+
+STRING.3: /'[^']*'/
+
+TYPE.2: /\binteger\b/i
+      | /\breal\b/i
+      | /\bstring\b/i
+      | /\bchar\b/i
+      | /\bboolean\b/i
+
+COMMENT1.2: /\{[^}]*\}/
+COMMENT2.2: /\(\*.*?\*\)/s
+
+
+%import common.WS
+%ignore WS
+%ignore COMMENT1
+%ignore COMMENT2
+%import common.NUMBER
+

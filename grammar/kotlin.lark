@@ -2,16 +2,13 @@ start: program
 
 program: tokens*
 
-tokens: keyword
+tokens: KEYWORD
+        | WORD
         | TYPE
-        | NAME
         | NUMBER
-        | OPERATOR
-        | BRAKET
         | STRING
-        | INTERPUNTIC
 
-keyword: "fun"
+KEYWORD.2: "fun"
         | "while"
         | "for"
         | "if"
@@ -19,21 +16,27 @@ keyword: "fun"
         | "val"
         | "else"
         | "return"
+        | "true"
+        | "false"
 
-OPERATOR: "+" | "-" | "/" | "*" | "+=" | "-=" | "*=" | "/=" | ">" | "<" | ">=" | "<=" | "==" | "!=" | "="
-
-BRAKET: "[" | "]" | "{" | "}" | "(" | ")"
-
-INTERPUNTIC: ";" | ":" | ","
+WORD: /[a-zA-Z_][a-zA-Z0-9_]*/
+        |"+" | "-" | "/" | "*" | "+=" | "-=" | "*=" | "/=" | ">" | "<" | ">=" | "<=" | "==" | "!=" | "="
+        | "[" | "]" | "{" | "}" | "(" | ")"
+        | ";" | ":" | ","
 
 STRING: /"[^"]*"/
 
 TYPE.2: "Int"
+        | "Byte"
+        | "Short"
+        | "Long"
         | "Float"
+        | "Double"
+        | "Boolean"
+        | "Char"
         | "String"
 
 
 %import common.WS
 %ignore WS
 %import common.NUMBER
-%import common.CNAME -> NAME

@@ -41,12 +41,13 @@ class GuiApp:
         self.footerInputPage.grid_columnconfigure(2, weight=1)
 
         title = CTkLabel(self.inputPage, text="Pascal to Kotlin & Java", font=("Bauhaus 93", 60))
-        self.textboxPascal = CTkTextbox(self.inputPage, font=("Cascadia Code", 16), tabs = (self.tabWidth,), text_color ="gray30", state="disabled")
+        self.textboxPascal = CTkTextbox(self.inputPage, font=("Cascadia Code", 16), tabs = (self.tabWidth,), text_color ="gray30")
         selectFileButton = CTkButton(self.footerInputPage, text="Wczytaj plik", command=self.choose_file)
         compileButton = CTkButton(self.footerInputPage, text="kompiluj", command=self.compile)
         self.filepathText = CTkLabel(self.footerInputPage, text="", font=("arial", 14))
 
         self.color_pascal_config()
+        self.textboxPascal.bind("<KeyRelease>", self.entry_change)
 
         title.grid(column = 0, row=0, sticky="nsew")
         self.textboxPascal.grid(column = 0, row = 1, sticky="nsew", padx = 200, pady = 10)
@@ -110,36 +111,42 @@ class GuiApp:
         print(f"plik: {file_path}")
         self.filepathText.configure(text=str(file_path))
         if file_path:
-            self.textboxPascal.configure(state="normal")
-            content = self.grammar.load(file_path)
+            with open(file_path, "r") as file:
+                content = file.read()
             self.textboxPascal.delete("1.0", "end")  # czyści pole
             self.textboxPascal.insert("1.0", content)  # wstawia tekst
-            self.color_pascal()
-            self.textboxPascal.configure(state="disabled")
+            self.color_pascal(content)
+
+    def entry_change(self, event = None):
+        for tag in self.textboxPascal.tag_names():
+            self.textboxPascal.tag_remove(tag, "1.0", "end")
+
+        text = self.textboxPascal.get("1.0", "end")
+        self.color_pascal(text)
+
 
     def color_pascal_config(self):
-        self.textboxPascal.tag_config("string", foreground="green")
-        self.textboxPascal.tag_config("numeric", foreground="cyan")
-        self.textboxPascal.tag_config("type", foreground="#167ef5")
-        self.textboxPascal.tag_config("word", foreground="white")
-        self.textboxPascal.tag_config("keyword", foreground="orange")
+        self.textboxPascal.tag_config("STRING", foreground="green")
+        self.textboxPascal.tag_config("NUMBER", foreground="cyan")
+        self.textboxPascal.tag_config("TYPE", foreground="#167ef5")
+        self.textboxPascal.tag_config("WORD", foreground="white")
+        self.textboxPascal.tag_config("KEYWORD", foreground="orange")
 
 
     def color_kotlin_config(self):
-        self.textboxKotlin.tag_config("string", foreground="green")
-        self.textboxKotlin.tag_config("keyword", foreground="orange")
-        self.textboxKotlin.tag_config("numeric", foreground="cyan")
-        self.textboxKotlin.tag_config("type", foreground="#167ef5")
+        self.textboxKotlin.tag_config("STRING", foreground="green")
+        self.textboxKotlin.tag_config("KEYWORD", foreground="orange")
+        self.textboxKotlin.tag_config("NUMBER", foreground="cyan")
+        self.textboxKotlin.tag_config("TYPE", foreground="#167ef5")
 
 
-    def color_pascal(self):
-        data = self.grammar.get_pascal_style()
-        for token in self.grammar.get_pascal_tokens():
-            self.textboxPascal.tag_add(data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
+    def color_pascal(self, content):
+        for token in self.grammar.get_pascal_tokens(content):
+            self.textboxPascal.tag_add(token[0], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
+
     def color_kotlin(self, content):
-        data = self.grammar.get_kotlin_style()
         for token in self.grammar.get_kotlin_tokens(content):
-            self.textboxKotlin.tag_add(data[token[0]], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
+            self.textboxKotlin.tag_add(token[0], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
 
 
     def download_java_file(self):
@@ -160,7 +167,9 @@ class GuiApp:
         self.inputPage.pack_forget()
         self.outputPage.pack(fill="both", expand=True)
 
-        self.grammar.make_tree()
+        text = self.textboxPascal.get("1.0", "end")
+        self.grammar.make_tree(text)
+
         java_code = self.grammar.get_java()
         kotlin_code = self.grammar.get_kotlin()
 

@@ -1,6 +1,6 @@
 from lark import Lark
 
-with open("08_typy.pas", "r") as f:
+with open("06_case.pas", "r") as f:
     pascal_code = f.read()
 
 parser = Lark.open("../grammar/grammar.lark", parser="lalr", rel_to=__file__)
