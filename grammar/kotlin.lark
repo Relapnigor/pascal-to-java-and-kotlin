@@ -3,39 +3,45 @@ start: program
 program: tokens*
 
 tokens: KEYWORD
-        | WORD
+        | STRING
         | TYPE
         | NUMBER
-        | STRING
+        | WORD
 
-KEYWORD.2: "fun"
-        | "while"
-        | "for"
-        | "if"
-        | "var"
-        | "val"
-        | "else"
-        | "return"
-        | "true"
-        | "false"
+KEYWORD.2: /\bfun\b/
+        | /\bwhile\b/
+        | /\bfor\b/
+        | /\bif\b/
+        | /\bvar\b/
+        | /\bval\b/
+        | /\belse\b/
+        | /\breturn\b/
+        | /\btrue\b/
+        | /\bfalse\b/
+        | /\bcase\b/
+        | /\bdo\b/
+        | /\bbreak\b/
+        | /\bcontinue\b/
+        | /\bnull\b/
 
 WORD: /[a-zA-Z_][a-zA-Z0-9_]*/
-        |"+" | "-" | "/" | "*" | "+=" | "-=" | "*=" | "/=" | ">" | "<" | ">=" | "<=" | "==" | "!=" | "="
-        | "[" | "]" | "{" | "}" | "(" | ")"
-        | ";" | ":" | ","
+    | /\+=|-=|\*=|\/=|%=|==|!=|>=|<=/
+    | /\.\./
+    | /\|\|/
+    | /\&\&/
+    | /[\+\-\/\*%><=\[\]\{\}\(\);:,.\!]/
 
 STRING: /"[^"]*"/
 
-TYPE.2: "Int"
-        | "Byte"
-        | "Short"
-        | "Long"
-        | "Float"
-        | "Double"
-        | "Boolean"
-        | "Char"
-        | "String"
-
+TYPE.2: /\bInt\b/
+        | /\bByte\b/
+        | /\bShort\b/
+        | /\bLong\b/
+        | /\bFloat\b/
+        | /\bDouble\b/
+        | /\bBoolean\b/
+        | /\bChar\b/
+        | /\bString\b/
 
 %import common.WS
 %ignore WS
