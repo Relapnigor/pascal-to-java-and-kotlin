@@ -173,11 +173,56 @@ class GuiApp:
                 f.write(content)
 
     def compile(self):
+        try:
+            text = self.textboxPascal.get("1.0", "end")
+            self.grammar.make_tree(text)
+            self.showOutput()
+        except Exception as e:
+            popup = ctk.CTkToplevel()
+            popup.title("Błąd")
+            popup.resizable(False, False)
+            popup.grab_set()
+            popup.transient(self.app)
+            popup.attributes("-topmost", True)
+            popup.lift()
+            popup.focus_force()
+
+            frame = ctk.CTkFrame(popup, corner_radius=12)
+            frame.pack(fill="both", expand=True)
+
+            title = ctk.CTkLabel(
+                frame,
+                text="Wystąpił błąd",
+                font=("Arial", 18, "bold"),
+                text_color="#ff4d4d"
+            )
+            title.pack(anchor="w", padx=15, pady=(15, 5))
+
+            error_label = ctk.CTkLabel(
+                frame,
+                text=str(e),
+                justify="left",
+                anchor="w",
+                wraplength=400,
+                font=("Arial", 13)
+            )
+            error_label.pack(fill="x", padx=15, pady=(0, 15))
+
+            button = ctk.CTkButton(
+                frame,
+                text="OK",
+                command=popup.destroy
+            )
+            button.pack(pady=(0, 15))
+
+            popup.update_idletasks()
+            width = popup.winfo_reqwidth()
+            height = popup.winfo_reqheight()
+            popup.geometry(f"{width}x{height}")
+
+    def showOutput(self):
         self.inputPage.pack_forget()
         self.outputPage.pack(fill="both", expand=True)
-
-        text = self.textboxPascal.get("1.0", "end")
-        self.grammar.make_tree(text)
 
         java_code = self.grammar.get_java()
         kotlin_code = self.grammar.get_kotlin()
