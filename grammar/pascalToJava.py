@@ -50,9 +50,9 @@ class PascalToJava(Transformer):
     def gt(self, c):  return f"{c[0]} > {c[1]}"
     def lt(self, c):  return f"{c[0]} < {c[1]}"
     def eq(self, c):  return f"{c[0]} == {c[1]}"
-    def ge(self, c):  return f"{c[0]} >= {c[1]}"
-    def le(self, c):  return f"{c[0]} <= {c[1]}"
-    def ne(self, c):  return f"{c[0]} != {c[1]}"
+    def ge(self, c):  return f"{c[0]} >= {c[2]}"
+    def le(self, c):  return f"{c[0]} <= {c[2]}"
+    def ne(self, c):  return f"{c[0]} != {c[2]}"
     def and_(self, c): return f"{c[0]} && {c[1]}"
     def or_(self, c):  return f"{c[0]} || {c[1]}"
     def not_(self, c): return f"!({c[0]})"
@@ -78,8 +78,8 @@ class PascalToJava(Transformer):
 
     def post_inc(self, c): return f"{c[0]}++;"
     def post_dec(self, c): return f"{c[0]}--;"
-    def pre_inc(self, c):  return f"++{c[0]};"
-    def pre_dec(self, c):  return f"--{c[0]};"
+    def pre_inc(self, c):  return f"++{c[1]};"
+    def pre_dec(self, c):  return f"--{c[1]};"
 
     # Calls
 

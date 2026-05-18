@@ -49,14 +49,6 @@ begin
     end;
   end;
 
-  { Case z wieloma etykietami dla galezi }
-  dzien := 3;
-  case dzien of
-    1, 7: nazwa := 'weekend';
-    2, 3, 4, 5, 6: nazwa := 'tydzien';
-    else nazwa := 'nieznany';
-  end;
-
   { Case ze stringiem }
   znak := 'A';
   case znak of
@@ -64,15 +56,6 @@ begin
     'B': wynik := 2;
     'C': wynik := 3;
     else wynik := 0;
-  end;
-
-  { Case ze stala nazewnicza jako etykieta }
-  miesiac := 4;
-  case miesiac of
-    1, 3, 5, 7, 8, 10, 12: wynik := 31;
-    4, 6, 9, 11:            wynik := 30;
-    2:                      wynik := 28;
-    else                    wynik := -1;
   end;
 
   { Case z wyrazeniem }

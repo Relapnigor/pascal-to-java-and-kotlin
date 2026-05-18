@@ -17,6 +17,7 @@ class Grammar:
         self.parser = Lark.open(f"../{grammar_file}", parser="lalr", rel_to=__file__)
         self.parserKotlin = Lark.open(f"../grammar/kotlin.lark", parser="lalr", rel_to=__file__)
         self.parserPascal = Lark.open("../grammar/pascal.lark", parser="lalr", rel_to=__file__)
+        self.parserJava = Lark.open("../grammar/java.lark", parser="lalr", rel_to=__file__)
         self.java_ganerator = java_ganerator
         self.kotlin_generator = kotlin_generator
         self.decision_tree = None
@@ -36,7 +37,7 @@ class Grammar:
 
     def get_kotlin_tokens(self, content):
         """
-         zwaraca tokeny Pascala potrzebne do kolorwania składni
+         zwaraca tokeny Kotlina potrzebne do kolorwania składni
 
         :param content: tekst kotlina
         :return: lista tokenów (type, line, column, end_column)
@@ -46,6 +47,18 @@ class Grammar:
 
         return [(t.type, t.line, t.column - 1, len(t.value) + t.column - 1) for t in self.parserKotlin.lex(content)]
 
+    def get_java_tokens(self, content):
+        """
+        zwraca tokeny Javy potrzebne do kolorowania składni
+
+        :param content: tekst java
+        :return: lista tokenów (type, line, column, end_column)
+        """
+
+        if not content:
+            raise Exception("No content to parse!")
+
+        return [(t.type, t.line, t.column - 1, len(t.value) + t.column - 1) for t in self.parserJava.lex(content)]
 
     def make_tree(self, content):
         """

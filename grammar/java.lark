@@ -1,0 +1,65 @@
+start: program
+
+program: tokens*
+
+tokens: KEYWORD
+      | STRING
+      | TYPE
+      | NUMBER
+      | WORD
+
+KEYWORD.2: /\bclass\b/
+          | /\bpublic\b/
+          | /\bprivate\b/
+          | /\bprotected\b/
+          | /\bstatic\b/
+          | /\bvoid\b/
+          | /\bnew\b/
+          | /\breturn\b/
+          | /\bif\b/
+          | /\belse\b/
+          | /\bwhile\b/
+          | /\bfor\b/
+          | /\bdo\b/
+          | /\bswitch\b/
+          | /\bcase\b/
+          | /\bbreak\b/
+          | /\bcontinue\b/
+          | /\btrue\b/
+          | /\bfalse\b/
+          | /\bnull\b/
+          | /\bthis\b/
+          | /\bsuper\b/
+          | /\btry\b/
+          | /\bcatch\b/
+          | /\bfinally\b/
+          | /\bthrow\b/
+          | /\bthrows\b/
+          | /\bimport\b/
+          | /\bpackage\b/
+          | /\bdefault\b/
+
+TYPE.2: /\bint\b/
+       | /\bbyte\b/
+       | /\bshort\b/
+       | /\blong\b/
+       | /\bfloat\b/
+       | /\bdouble\b/
+       | /\bboolean\b/
+       | /\bchar\b/
+       | /\bString\b/
+       | /\bvoid\b/
+
+WORD: /[a-zA-Z_$][a-zA-Z0-9_$]*/
+    | /\+=|-=|\*=|\/=|%=|==|!=|>=|<=/
+    | /\+\+|--/
+    | /\|\|/
+    | /\&\&/
+    | /<<|>>|>>>/
+    | /[\+\-\/\*%><=\[\]\{\}\(\);:,.\!&|^~?]/
+
+STRING: /"([^"\\]|\\.)*"/
+
+%import common.WS
+%ignore WS
+%import common.NUMBER

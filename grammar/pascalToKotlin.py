@@ -69,12 +69,16 @@ class PascalToKotlin(Transformer):
 
     def post_inc(self, c): return f"{c[0]}++"
     def post_dec(self, c): return f"{c[0]}--"
-    def pre_inc(self, c):  return f"++{c[0]}"
-    def pre_dec(self, c):  return f"--{c[0]}"
+    def pre_inc(self, c):  return f"++{c[1]}"
+    def pre_dec(self, c):  return f"--{c[1]}"
 
     def arg_list(self, c): return "(" + ", ".join(c) + ")"
-    def proc_call(self, c): return f"{c[0]}{c[1]}"
-    def func_call(self, c): return f"{c[0]}{c[1]}"
+    def proc_call(self, c):
+        args = c[1] if len(c) > 1 else "()"
+        return f"{c[0]}{args};"
+    def func_call(self, c):
+        args = c[1] if len(c) > 1 else "()"
+        return f"{c[0]}{args}"
 
     def assignment(self, c): return f"{c[0]} {c[1]} {c[2]}"
     def return_statement(self, c): return f"return {c[0]}"

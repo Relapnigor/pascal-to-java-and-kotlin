@@ -91,6 +91,7 @@ class GuiApp:
         backButton = CTkButton(self.footerOutputPage, text="<-", command=self.go_back)
 
         self.color_kotlin_config()
+        self.color_java_config()
 
         javatxt.grid(column=1, row=0, sticky="nsw",padx=20)
         kotlintxt.grid(column=0, row=0, sticky="nsw",padx=20)
@@ -139,6 +140,11 @@ class GuiApp:
         self.textboxKotlin.tag_config("NUMBER", foreground="cyan")
         self.textboxKotlin.tag_config("TYPE", foreground="#167ef5")
 
+    def color_java_config(self):
+        self.textboxJava.tag_config("STRING", foreground="green")
+        self.textboxJava.tag_config("KEYWORD", foreground="orange")
+        self.textboxJava.tag_config("NUMBER", foreground="cyan")
+        self.textboxJava.tag_config("TYPE", foreground="#167ef5")
 
     def color_pascal(self, content):
         for token in self.grammar.get_pascal_tokens(content):
@@ -148,6 +154,9 @@ class GuiApp:
         for token in self.grammar.get_kotlin_tokens(content):
             self.textboxKotlin.tag_add(token[0], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
 
+    def color_java(self, content):
+        for token in self.grammar.get_java_tokens(content):
+            self.textboxJava.tag_add(token[0], f"{token[1]}.{token[2]}", f"{token[1]}.{token[3]}")
 
     def download_java_file(self):
         file_path = filedialog.asksaveasfilename(defaultextension=".java")
@@ -183,6 +192,7 @@ class GuiApp:
         self.textboxKotlin.insert("1.0", kotlin_code)
 
         self.color_kotlin(kotlin_code)
+        self.color_java(java_code)
 
         self.textboxJava.configure(state="disabled")
         self.textboxKotlin.configure(state="disabled")
