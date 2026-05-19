@@ -1,4 +1,5 @@
 from lark import Transformer
+import re
 
 class PascalToJava(Transformer):
 
@@ -67,7 +68,10 @@ class PascalToJava(Transformer):
 
     # Assignment operators
 
-    def lvalue(self, n):      return str(n[0])
+    def lvalue(self, n):
+        if len(n) == 1:
+            return str(n[0])
+        return f"{n[0]}[{n[1]}]"
     def array_access(self, c): return f"{c[0]}[{c[1]}]"
 
     def assign(self, c):      return "="
@@ -136,13 +140,10 @@ class PascalToJava(Transformer):
     def case_label(self, c):
         return str(c[0])
 
-    def case_label_list(self, c):
-        return list(c)
     def case_branch(self, c):
-        labels = c[0]
-        stmt   = c[1]
-        cases  = "\n".join(f"case {lbl}:" for lbl in labels)
-        return f"{cases}\n{_indent(stmt)}\n    break;"
+        label = c[0]
+        stmt = c[1]
+        return f"case {label}:\n{_indent(stmt)}\n    break;"
 
     def case_else(self, c):
         return f"default:\n{_indent(c[0])}\n    break;"
@@ -190,15 +191,21 @@ class PascalToJava(Transformer):
         return ", ".join(c)
 
     def array_type(self, c):
-        return f"{c[2]}[]"
+        nums = [x for x in c if str(x) != ".."]
+        start = int(str(nums[0]))
+        end = int(str(nums[1]))
+        size = end - start + 1
+        elem = nums[2]
+        return f"__ARRAY__{elem}__{size}__"
 
     def var_decl(self, c):
         variables = str(c[0]).split(", ")
-        jtype = c[1]
-        if isinstance(jtype, str) and jtype.endswith("[]"):
-            base = jtype[:-2]
-            size = None
-            lines = [f"{jtype} {v} = new {base}[0]" for v in variables]
+        jtype = str(c[1])
+        m = re.match(r'^__ARRAY__(.+)__(\d+)__$', jtype)
+        if m:
+            base = m.group(1)
+            size = m.group(2)
+            lines = [f"{base}[] {v} = new {base}[{size}]" for v in variables]
         else:
             lines = [f"{jtype} {v}" for v in variables]
         return ";\n".join(lines) + ";"
@@ -207,7 +214,16 @@ class PascalToJava(Transformer):
         return c[0]
 
     def const_decl(self, c):
-        return f"static final var {c[0]} = {c[1]};"
+        val = str(c[1])
+        if re.match(r'^-?\d+$', val):
+            jtype = "int"
+        elif re.match(r'^-?\d+\.\d+$', val):
+            jtype = "double"
+        elif val.startswith('"'):
+            jtype = "String"
+        else:
+            jtype = "int"
+        return f"static final {jtype} {c[0]} = {val};"
 
     def const_section(self, c):
         return "\n".join(c)
