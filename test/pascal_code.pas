@@ -123,7 +123,7 @@ begin
     2: begin
         WriteLn('case 2')
        end;
-    3,4: a := 3.5;
+    3: a := 3.5;
     else
        WriteLn('inne');
   end;

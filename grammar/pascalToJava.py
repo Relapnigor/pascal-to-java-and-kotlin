@@ -5,6 +5,9 @@ class PascalToJava(Transformer):
 
     # Tokens
 
+    def BOOL(self, val):
+        return str(val).lower()
+
     def INT(self, val):
         return str(val)
 

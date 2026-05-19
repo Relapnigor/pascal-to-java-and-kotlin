@@ -2,6 +2,9 @@ from lark import Lark, Transformer
 import re
 
 class PascalToKotlin(Transformer):
+    def BOOL(self, val):
+        return str(val).lower()
+
     def INT(self, val):
         return str(val)
 
