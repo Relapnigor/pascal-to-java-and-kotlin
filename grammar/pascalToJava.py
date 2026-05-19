@@ -142,10 +142,10 @@ class PascalToJava(Transformer):
         labels = c[0]
         stmt   = c[1]
         cases  = "\n".join(f"case {lbl}:" for lbl in labels)
-        return f"{cases}\n{_indent(stmt)}\nbreak;"
+        return f"{cases}\n{_indent(stmt)}\n    break;"
 
     def case_else(self, c):
-        return f"default:\n{_indent(c[0])}\nbreak;"
+        return f"default:\n{_indent(c[0])}\n    break;"
 
     def case_statement(self, c):
         expr    = c[0]
@@ -254,7 +254,7 @@ class PascalToJava(Transformer):
             if isinstance(item, tuple) and item[0] in ("VAR_SECTION", "CONST_SECTION"):
                 statics.append(item[1])
             else:
-                rest.append(_indent_method(item))
+                rest.append(item)
 
         parts = statics + rest
         return "\n\n".join(parts)

@@ -121,10 +121,10 @@ class PascalToKotlin(Transformer):
         labels = c[0]
         stmt   = c[1]
         cases  = "\n".join(f"case {lbl}:" for lbl in labels)
-        return f"{cases}\n{self._indent(stmt)}\nbreak;"
+        return f"{cases}\n{self._indent(stmt)}\n    break;"
 
     def case_else(self, c):
-        return f"default:\n{self._indent(c[0])}\nbreak;"
+        return f"default:\n{self._indent(c[0])}\n    break;"
 
     def case_statement(self, c):
         expr    = c[0]
