@@ -117,8 +117,11 @@ class PascalToJava(Transformer):
         then = _indent(c[1])
         result = f"if ({cond}) {{\n{then}\n}}"
         if len(c) == 3:
-            else_ = _indent(c[2])
-            result += f" else {{\n{else_}\n}}"
+            else_body = c[2]
+            if else_body.startswith("if ("):
+                result += f" else {else_body}"
+            else:
+                result += f" else {{\n{_indent(else_body)}\n}}"
         return result
 
     def while_stmt(self, c):

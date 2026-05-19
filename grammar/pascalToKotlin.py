@@ -94,8 +94,11 @@ class PascalToKotlin(Transformer):
         then = self._indent(c[1])
         result = f"if ({cond}){{\n{then}\n}}"
         if len(c) == 3:
-            else_ = self._indent(c[2])
-            result += f"\nelse{{\n{else_}\n}}"
+            else_body = c[2]
+            if else_body.startswith("if ("):
+                result += f"\nelse {else_body}"
+            else:
+                result += f"\nelse{{\n{self._indent(else_body)}\n}}"
         return result
 
     def while_stmt(self, c):
