@@ -39,7 +39,8 @@ basic_statement: lvalue assignment condition                       -> assignment
          | NAME "(" arg_list? ")"                  -> proc_call
          | if_statement
          | while_statement
-         | for_statement
+         | for_statement_upto
+         | for_statement_downto
          | repeat_statement
          | case_statement
          | "return" condition                           -> return_statement
@@ -60,7 +61,8 @@ inc_dec: lvalue INCREMENT                           -> post_inc
 
 if_statement: "if" condition "then" inner_statement ("else" inner_statement)? -> if_stmt
 while_statement: "while" condition "do" inner_statement -> while_stmt
-for_statement: "for" NAME ASSIGN expr ("to" | "downto") expr "do" inner_statement     -> for_stmt
+for_statement_upto: "for" NAME ASSIGN expr "to" expr "do" inner_statement     -> for_stmt_up
+for_statement_downto: "for" NAME ASSIGN expr "downto" expr "do" inner_statement -> for_stmt_down
 repeat_statement: "repeat" inner_stmt_list "until" condition
 case_statement: "case" expr "of" case_branch+ case_else? "end"
 

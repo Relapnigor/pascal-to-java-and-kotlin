@@ -125,12 +125,18 @@ class PascalToJava(Transformer):
         body = _indent(c[1])
         return f"while ({c[0]}) {{\n{body}\n}}"
 
-    def for_stmt(self, c):
+    def for_stmt_up(self, c):
         var   = c[0]
         start = c[2]
         end   = c[3]
         body  = _indent(c[4])
         return f"for (int {var} = {start}; {var} <= {end}; {var}++) {{\n{body}\n}}"
+    def for_stmt_down(self, c):
+        var   = c[0]
+        start = c[2]
+        end   = c[3]
+        body  = _indent(c[4])
+        return f"for (int {var} = {start}; {var} >= {end}; {var}--) {{\n{body}\n}}"
 
     def repeat_statement(self, c):
         body = _indent(c[0])

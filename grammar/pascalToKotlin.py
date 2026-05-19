@@ -98,12 +98,19 @@ class PascalToKotlin(Transformer):
         body = self._indent(c[1])
         return f"while ({c[0]}) {{\n{body}\n}}"
 
-    def for_stmt(self, c):
+    def for_stmt_up(self, c):
         var = c[0]
         start = c[2]
         stop = c[3]
         body = self._indent(c[4])
         return f"for ({var} in {start} .. {stop}) {{\n{body}\n}}"
+
+    def for_stmt_down(self, c):
+        var = c[0]
+        start = c[2]
+        stop = c[3]
+        body = self._indent(c[4])
+        return f"for ({var} in {start} downTo {stop}) {{\n{body}\n}}"
 
     def repeat_statement(self, c):
         body = self._indent(c[0])
@@ -226,7 +233,7 @@ class PascalToKotlin(Transformer):
 
 
 if __name__ == "__main__":
-    with open("../test/pascal_code.pas", "r") as f:
+    with open("../test/03_petle.pas", "r") as f:
         pascal_code = f.read()
 
     parser = Lark.open("grammar.lark", parser="lalr", rel_to=__file__)
