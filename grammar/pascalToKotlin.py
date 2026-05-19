@@ -1,4 +1,5 @@
 from lark import Lark, Transformer
+import re
 
 class PascalToKotlin(Transformer):
     def INT(self, val):
@@ -58,7 +59,10 @@ class PascalToKotlin(Transformer):
     locals()["or"]  = lambda self, c: f"{c[0]} || {c[1]}"
     locals()["not"] = lambda self, c: f"!({c[0]})"
 
-    def lvalue(self, n): return str(n[0])
+    def lvalue(self, n):
+        if len(n) == 1:
+            return str(n[0])
+        return f"{n[0]}[{n[1]}]"
     def array_access(self, c): return f"{c[0]}[{c[1]}]"
 
     def assign(self, c):      return "="
@@ -121,14 +125,10 @@ class PascalToKotlin(Transformer):
     def case_label(self, c):
         return str(c[0])
 
-    def case_label_list(self, c):
-        return list(c)
-
     def case_branch(self, c):
-        labels = c[0]
-        stmt   = c[1]
-        cases  = "\n".join(f"case {lbl}:" for lbl in labels)
-        return f"{cases}\n{self._indent(stmt)}\n    break;"
+        label = c[0]
+        stmt = c[1]
+        return f"case {label}:\n{self._indent(stmt)}\n    break;"
 
     def case_else(self, c):
         return f"default:\n{self._indent(c[0])}\n    break;"
@@ -158,13 +158,25 @@ class PascalToKotlin(Transformer):
 
     def param_list(self, c): return ", ".join(c)
 
-    def array_type(self, c): return f"{c[2]}[]"
+    def array_type(self, c):
+        nums = [x for x in c if str(x) != ".."]
+        start = int(str(nums[0]))
+        end = int(str(nums[1]))
+        size = end - start + 1
+        elem = nums[2]
+        return f"__ARRAY__{elem}__{size}__"
 
     def var_decl(self,c):
         variables = str(c[0]).split(", ")
-        variables = ["var " + v + f": {c[1]}" for v in variables]
-        result = "\n".join(variables)
-        return result
+        jtype = str(c[1])
+        m = re.match(r'^__ARRAY__(.+)__(\d+)__$', jtype)
+        if m:
+            base = m.group(1)
+            size = m.group(2)
+            variables = [f"var {v}: Array<{base}> = Array({size}) {{ 0 as {base} }}" for v in variables]
+        else:
+            variables = [f"var {v}: {jtype}" for v in variables]
+        return "\n".join(variables)
 
     def var_section(self,c): return c[0]
 
