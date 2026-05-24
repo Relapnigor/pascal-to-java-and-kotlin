@@ -1,0 +1,6 @@
+program BrakTypu;
+var
+  i;
+begin
+  i := 1;
+end.

@@ -1,0 +1,5 @@
+program BrakEnd;
+var
+  i : integer;
+begin
+  i := 1;
