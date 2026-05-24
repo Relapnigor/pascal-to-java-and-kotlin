@@ -1,4 +1,5 @@
 from lark import Lark
+from .SemanticChecker import SemanticChecker
 
 class Grammar:
     """
@@ -70,6 +71,10 @@ class Grammar:
             raise Exception("No content to parse!")
 
         self.decision_tree = self.parser.parse(content)
+
+        checker = SemanticChecker()
+        checker.check_types(self.decision_tree)
+        checker.check_breaks(self.decision_tree)
 
 
     def get_java(self):
