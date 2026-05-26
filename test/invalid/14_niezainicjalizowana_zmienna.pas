@@ -10,8 +10,6 @@ var
 
 begin
   opcja := 2;
-  dzien := 3;
-  miesiac := 1;
 
   { Podstawowy case z integer }
   case opcja of

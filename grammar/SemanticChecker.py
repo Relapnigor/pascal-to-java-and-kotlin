@@ -14,6 +14,7 @@ class SemanticChecker(Visitor):
         self.variables = {}
         self.constants = {}
         self.functions = {}
+        self.initialized = set()
 
     def var_decl(self, tree):
         """
@@ -85,7 +86,8 @@ class SemanticChecker(Visitor):
                     name = str(child)
                     if (name not in self.variables and
                             name not in self.constants and
-                            name.lower() not in self.functions):
+                            name.lower() not in self.functions and
+                            name.lower() not in self.BUILTIN):
                         raise SemanticError(f"Błąd: niezadeklarowana zmienna '{name}'")
 
         for child in tree.children:
@@ -102,6 +104,8 @@ class SemanticChecker(Visitor):
         """
         self._collect_declarations(tree)
         self.check_undeclared(tree)
+        self._collect_initialized(tree)
+        self.check_uninitialized(tree)
         self.visit(tree)
 
     def _collect_declarations(self, tree):
@@ -158,6 +162,142 @@ class SemanticChecker(Visitor):
                 f"Błąd typów: nie można przypisać '{expr_type}' "
                 f"do '{lval}' (typ '{var_type}')"
             )
+
+    def _collect_initialized(self, tree):
+        """
+        Rekurencyjnie przechodzi drzewo i wypełnia self.initialized
+        nazwami zmiennych, którym na pewno zostanie przypisana wartość:
+
+        1. Stałe (const) — zawsze zainicjowane przez definicję.
+        2. Parametry funkcji/procedur — zainicjowane przez wywołującego.
+        3. Przypisanie (assignment) — lewa strona staje się zainicjowana.
+        4. Zmienna iteratora pętli for — ustawiana przez runtime.
+        5. Argumenty read/readln — wypełniane przez wejście.
+
+        Uwaga: nie próbujemy analizować gałęzi if/else — tylko pewne ścieżki.
+        Zmienne zainicjowane wyłącznie w jednej gałęzi if NIE trafiają do zbioru.
+        """
+        if isinstance(tree, Token):
+            return
+
+        # Stałe są zawsze zainicjowane
+        if tree.data == "const_decl":
+            self.initialized.add(str(tree.children[0]))
+            return
+
+        # Parametry funkcji/procedur traktujemy jak zainicjowane
+        if tree.data == "param_decl":
+            name_list_tree = tree.children[0]
+            for child in name_list_tree.children:
+                if isinstance(child, Token):
+                    self.initialized.add(str(child).strip())
+            return
+
+        # Przypisanie: lewa strona (lvalue) staje się zainicjowana
+        if tree.data == "assignment":
+            lval_tree = tree.children[0]  # węzeł lvalue
+            lval = str(lval_tree.children[0])
+            self.initialized.add(lval)
+            # Kontynuuj dla prawej strony (może zawierać dalsze przypisania)
+            for child in tree.children[1:]:
+                if isinstance(child, Tree):
+                    self._collect_initialized(child)
+            return
+
+        # Iterator pętli for — ustawiany automatycznie
+        if tree.data in ("for_stmt_up", "for_stmt_down"):
+            # children[0] to NAME iteratora (Token)
+            self.initialized.add(str(tree.children[0]))
+            for child in tree.children[1:]:
+                if isinstance(child, Tree):
+                    self._collect_initialized(child)
+            return
+
+        # read / readln wypełniają swoje argumenty
+        if tree.data == "proc_call":
+            fname = str(tree.children[0]).lower()
+            if fname in ("read", "readln") and len(tree.children) > 1:
+                arg_list = tree.children[1]  # węzeł arg_list
+                if isinstance(arg_list, Tree):
+                    for arg in arg_list.children:
+                        if isinstance(arg, Token) and arg.type == "NAME":
+                            self.initialized.add(str(arg))
+                        elif isinstance(arg, Tree) and arg.data in ("lvalue",):
+                            self.initialized.add(str(arg.children[0]))
+            return
+
+        for child in tree.children:
+            if isinstance(child, Tree):
+                self._collect_initialized(child)
+
+    def check_uninitialized(self, tree, _lvalue_ctx=False):
+        """
+        Rekurencyjnie sprawdza, czy zmienne są zainicjowane przed użyciem.
+
+        Zasady:
+        - Stałe i parametry funkcji są zawsze zainicjowane (trafiają do
+          self.initialized w _collect_initialized).
+        - Lewa strona przypisania (lvalue) jest POMIJANA — to definicja,
+          nie odczyt.
+        - W indeksach tablic (array_access, lvalue z indeksem) indeks
+          jest sprawdzany normalnie.
+        - Wywołania funkcji/procedur — argumenty są sprawdzane.
+        - Węzły deklaracji (var_decl, const_decl, …) są pomijane w całości.
+
+        Rzuca SemanticError przy pierwszym naruszeniu.
+        """
+        if isinstance(tree, Token):
+            # Sprawdzamy tylko NAME, które są odczytem (nie lvalue strony :=)
+            if tree.type == "NAME" and not _lvalue_ctx:
+                name = str(tree)
+                if (name in self.variables and
+                        name not in self.initialized and
+                        name not in self.constants and
+                        name.lower() not in self.functions and
+                        name.lower() not in self.BUILTIN):
+                    raise SemanticError(
+                        f"Błąd: zmienna '{name}' użyta przed inicjalizacją"
+                    )
+            return
+
+        # Węzły deklaracji — pomijamy całkowicie
+        if tree.data in ("var_decl", "const_decl", "function_decl",
+                         "procedure_decl", "param_decl", "name_list"):
+            return
+
+        # Przypisanie: lewa strona to lvalue (nie sprawdzamy jako odczyt),
+        # prawa strona i operator są sprawdzane normalnie.
+        if tree.data == "assignment":
+            # children[0] = lvalue, children[1] = operator, children[2] = expr
+            lval_tree = tree.children[0]
+            lval_name = str(lval_tree.children[0])
+
+            # Jeśli to przypisanie z indeksem (a[i] := ...), sprawdź indeks
+            if len(lval_tree.children) > 1:
+                for idx_child in lval_tree.children[1:]:
+                    self.check_uninitialized(idx_child)
+
+            # Zarejestruj inicjalizację przed sprawdzeniem prawej strony
+            self.initialized.add(lval_name)
+
+            # Sprawdź prawą stronę
+            for child in tree.children[1:]:
+                if isinstance(child, Tree):
+                    self.check_uninitialized(child)
+            return
+
+        # Iterator for jest inicjowany przez runtime — pomijamy jako lvalue
+        if tree.data in ("for_stmt_up", "for_stmt_down"):
+            self.initialized.add(str(tree.children[0]))
+            # Sprawdź wyrażenia graniczne i ciało
+            for child in tree.children[1:]:
+                if isinstance(child, Tree):
+                    self.check_uninitialized(child)
+            return
+
+        # Dla pozostałych węzłów — sprawdzaj dzieci normalnie
+        for child in tree.children:
+            self.check_uninitialized(child)
 
     def _infer_type(self, node):
         """
@@ -254,3 +394,4 @@ class SemanticChecker(Visitor):
         self.variables = {}
         self.constants = {}
         self.functions = {}
+        self.initialized = set()
