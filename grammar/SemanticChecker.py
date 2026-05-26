@@ -15,6 +15,7 @@ class SemanticChecker(Visitor):
         self.constants = {}
         self.functions = {}
         self.initialized = set()
+        self.current_function = None
 
     def var_decl(self, tree):
         """
@@ -55,6 +56,50 @@ class SemanticChecker(Visitor):
         """
         name = str(tree.children[0])
         self.functions[name.lower()] = str(tree.children[-2]).lower()
+
+    def function_decl_visit(self, tree):
+        name = str(tree.children[0]).lower()
+        old_func = self.current_function
+        self.current_function = name
+
+        # Przechodzimy dzieci (w tym func_body)
+        for child in tree.children:
+            if isinstance(child, Tree):
+                self.visit(child)
+
+        self.current_function = old_func
+
+    def procedure_decl_visit(self, tree):
+        name = str(tree.children[0]).lower()
+        old_func = self.current_function
+        self.current_function = name
+
+        for child in tree.children:
+            if isinstance(child, Tree):
+                self.visit(child)
+
+        self.current_function = old_func
+
+    def return_statement(self, tree):
+        if not self.current_function:
+            raise SemanticError("Błąd: instrukcja 'return' użyta poza funkcją lub procedurą")
+
+        expected_type = self.functions.get(self.current_function)
+        expr_node = tree.children[0]  # condition / expr
+
+        # Wnioskowanie typu zwracanego wyrażenia
+        return_type = self._infer_type(expr_node)
+
+        if expected_type == "void":
+            if return_type is not None:
+                raise SemanticError(f"Błąd: Procedura '{self.current_function}' nie może zwracać wartości")
+            return
+
+        if return_type and not self._types_compatible(expected_type, return_type):
+            raise SemanticError(
+                f"Błąd typów w funkcji '{self.current_function}': "
+                f"nie można zwrócić '{return_type}' z funkcji typu '{expected_type}'"
+            )
 
     def check_undeclared(self, tree):
         """
@@ -106,7 +151,28 @@ class SemanticChecker(Visitor):
         self.check_undeclared(tree)
         self._collect_initialized(tree)
         self.check_uninitialized(tree)
-        self.visit(tree)
+        self._custom_visit(tree)
+
+    def _custom_visit(self, tree):
+        """ Ręczny dispatcher, aby poprawnie obsługiwać wchodzenie do wnętrza funkcji. """
+        if isinstance(tree, Token):
+            return
+
+        if tree.data == "function_decl":
+            self.function_decl_visit(tree)
+            return
+        elif tree.data == "procedure_decl":
+            self.procedure_decl_visit(tree)
+            return
+
+
+        for child in tree.children:
+            if isinstance(child, Tree):
+                self._custom_visit(child)
+
+
+        if hasattr(self, tree.data):
+            getattr(self, tree.data)(tree)
 
     def _collect_declarations(self, tree):
         """
@@ -395,3 +461,4 @@ class SemanticChecker(Visitor):
         self.constants = {}
         self.functions = {}
         self.initialized = set()
+        self.current_function = None
