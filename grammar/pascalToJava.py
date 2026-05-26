@@ -223,7 +223,7 @@ class PascalToJava(Transformer):
         return ";\n".join(lines) + ";"
 
     def var_section(self, c):
-        return c[0]
+        return "\n".join(c)
 
     def const_decl(self, c):
         val = str(c[1])

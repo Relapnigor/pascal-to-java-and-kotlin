@@ -184,7 +184,8 @@ class PascalToKotlin(Transformer):
             variables = [f"var {v}: {jtype}" for v in variables]
         return "\n".join(variables)
 
-    def var_section(self,c): return c[0]
+    def var_section(self, c):
+        return "\n".join(c)
 
     def const_decl(self, c): return f"val {c[0]} = {c[1]}"
 
