@@ -27,6 +27,7 @@ Planowane jest utworzenie interfejsu graficznego umożliwiającego:
 | Rodzaj translatora  | Kompilator                                   |
 | Język implementacji | Python                                       |
 | Skaner / parser     | [Lark](https://github.com/lark-parser/lark)  |
+| GUI                 | customtkinter                                | 
 | Dane wejściowe      | Kod źródłowy Pascal (`.pas`)                 |
 | Dane wyjściowe      | Kod źródłowy Java (`.java`) i Kotlin (`.kt`) |
 
@@ -162,3 +163,16 @@ Cała gramatyka znajduje się w pliku [grammar.lark](https://github.com/Relapnig
 | `LSQB`      | `[`    | tablice              |
 | `RSQB`      | `]`    | tablice              |
 | `RANGE`     | `..`   | zakres               |
+
+---
+
+## Instrukcja uruchomienia
+Aplikację należy uruchomić poprzez wykonanie pliku `main.py` lub dostarczanego pliku wykonywalnego `main.exe`.
+
+---
+
+## Przykład użycia
+
+- Wczytanie pliku źródłowego w formacie `.pas` za pomocą interfejsu graficznego.
+- Opcjonalne wprowadzenie lub edycja kodu bezpośrednio w oknie edytora aplikacji.
+- Pobranie wygenerowanych plików wynikowych w formacie `.java` i/lub `.kt`.
