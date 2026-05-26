@@ -152,7 +152,12 @@ class PascalToKotlin(Transformer):
     def stmt_list(self, c): return "\n".join(c)
 
     def block(self,c):
-        return f"fun main(args: Array<String>){{\n{c[0]} \n}}"
+        body  = ""
+        if len(c) > 0:
+            body = "\n" + str(c[0])
+
+        return f"fun main(args: Array<String>) {{{body}\n}}"
+
 
     def name_list(self, c): return ", ".join(c)
 

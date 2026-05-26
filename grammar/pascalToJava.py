@@ -186,8 +186,10 @@ class PascalToJava(Transformer):
         return "\n".join(c)
 
     def block(self, c):
-        body = _indent(c[0])
-        return f"public static void main(String[] args) {{\n{body}\n}}"
+        body  = ""
+        if len(c) > 0:
+            body = "\n" + _indent(c[0])
+        return f"public static void main(String[] args) {{{body}\n}}"
 
     # Declarations
 
