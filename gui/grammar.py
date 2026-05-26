@@ -1,4 +1,15 @@
 from lark import Lark
+from grammar.SemanticChecker import SemanticChecker
+import sys
+import os
+
+def resource_path(relative_path):
+    """ Zwraca ścieżkę do zasobu"""
+    if hasattr(sys, '_MEIPASS'):
+        base = sys._MEIPASS
+    else:
+        base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base, relative_path)
 
 class Grammar:
     """
@@ -14,10 +25,10 @@ class Grammar:
         :param java_ganerator: klasa odpowidzialna za przekształacanie pascala na jave
         :param kotlin_generator: klasa odpowidzialna za przekształacanie pascala na jave
         """
-        self.parser = Lark.open(f"../{grammar_file}", parser="lalr", rel_to=__file__)
-        self.parserKotlin = Lark.open(f"../grammar/kotlin.lark", parser="lalr", rel_to=__file__)
-        self.parserPascal = Lark.open("../grammar/pascal.lark", parser="lalr", rel_to=__file__)
-        self.parserJava = Lark.open("../grammar/java.lark", parser="lalr", rel_to=__file__)
+        self.parser = Lark.open(resource_path("grammar/grammar.lark"), parser="lalr")
+        self.parserKotlin = Lark.open(resource_path("grammar/kotlin.lark"), parser="lalr")
+        self.parserPascal = Lark.open(resource_path("grammar/pascal.lark"), parser="lalr")
+        self.parserJava = Lark.open(resource_path("grammar/java.lark"), parser="lalr")
         self.java_ganerator = java_ganerator()
         self.kotlin_generator = kotlin_generator()
         self.decision_tree = None
