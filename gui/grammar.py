@@ -1,12 +1,11 @@
 from lark import Lark
-from grammar.SemanticChecker import SemanticChecker
 
 class Grammar:
     """
     Klasa do obsługi gramatyki,
     jest wykorzystywana przez GuiApp
     """
-    def __init__(self, grammar_file, java_ganerator=None, kotlin_generator=None):
+    def __init__(self, grammar_file, semantic_checker, java_ganerator=None, kotlin_generator=None):
         """
         wczytwanie plikiów gramatyki dla pascala, javy i kotlina
         przypisywane są generatory kodu do javi i kotlina
@@ -19,10 +18,10 @@ class Grammar:
         self.parserKotlin = Lark.open(f"../grammar/kotlin.lark", parser="lalr", rel_to=__file__)
         self.parserPascal = Lark.open("../grammar/pascal.lark", parser="lalr", rel_to=__file__)
         self.parserJava = Lark.open("../grammar/java.lark", parser="lalr", rel_to=__file__)
-        self.java_ganerator = java_ganerator
-        self.kotlin_generator = kotlin_generator
-        self.checker = SemanticChecker()
+        self.java_ganerator = java_ganerator()
+        self.kotlin_generator = kotlin_generator()
         self.decision_tree = None
+        self.checker = semantic_checker()
 
     def get_pascal_tokens(self, content):
         """
@@ -88,7 +87,7 @@ class Grammar:
             raise Exception("Decision tree missing!")
 
         if self.java_ganerator:
-            return self.java_ganerator().transform(self.decision_tree)
+            return self.java_ganerator.transform(self.decision_tree)
         return "error"
 
     def get_kotlin(self):
@@ -102,5 +101,5 @@ class Grammar:
             raise Exception("Decision tree missing!")
 
         if self.kotlin_generator:
-            return self.kotlin_generator().transform(self.decision_tree)
+            return self.kotlin_generator.transform(self.decision_tree)
         return "error"
