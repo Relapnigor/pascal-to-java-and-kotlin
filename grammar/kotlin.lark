@@ -18,7 +18,7 @@ KEYWORD.2: /\bfun\b/
         | /\breturn\b/
         | /\btrue\b/
         | /\bfalse\b/
-        | /\bcase\b/
+        | /\bwhen\b/
         | /\bdo\b/
         | /\bbreak\b/
         | /\bcontinue\b/

@@ -127,22 +127,22 @@ class PascalToKotlin(Transformer):
         cond = c[1]
         return f"do {{\n{body}\n}} while (!({cond}));"
 
-
     def case_label(self, c):
         return str(c[0])
 
     def case_branch(self, c):
         label = c[0]
-        stmt = c[1]
-        return f"case {label}:\n{self._indent(stmt)}\n    break;"
+        stmt = self._indent(c[1])
+        return f"{label} -> {{\n{stmt}\n}}"
 
     def case_else(self, c):
-        return f"default:\n{self._indent(c[0])}\n    break;"
+        stmt = self._indent(c[0])
+        return f"else -> {{\n{stmt}\n}}"
 
     def case_statement(self, c):
-        expr    = c[0]
+        expr = c[0]
         branches = "\n".join(c[1:])
-        return f"switch ({expr}) {{\n{self._indent(branches)}\n}}"
+        return f"when ({expr}) {{\n{self._indent(branches)}\n}}"
 
     def basic_statement(self,c): return "\n".join(c)
     def inner_statement(self, c):return c[0]
