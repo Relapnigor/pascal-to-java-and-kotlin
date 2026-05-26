@@ -1,5 +1,5 @@
 from lark import Lark
-from .SemanticChecker import SemanticChecker
+from grammar.SemanticChecker import SemanticChecker
 
 class Grammar:
     """
@@ -21,6 +21,7 @@ class Grammar:
         self.parserJava = Lark.open("../grammar/java.lark", parser="lalr", rel_to=__file__)
         self.java_ganerator = java_ganerator
         self.kotlin_generator = kotlin_generator
+        self.checker = SemanticChecker()
         self.decision_tree = None
 
     def get_pascal_tokens(self, content):
@@ -72,9 +73,8 @@ class Grammar:
 
         self.decision_tree = self.parser.parse(content)
 
-        checker = SemanticChecker()
-        checker.check_types(self.decision_tree)
-        checker.check_breaks(self.decision_tree)
+        self.checker.check_types(self.decision_tree)
+        self.checker.check_breaks(self.decision_tree)
 
 
     def get_java(self):
