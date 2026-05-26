@@ -7,6 +7,9 @@ class SemanticError(Exception):
 
 
 class SemanticChecker(Visitor):
+    BUILTIN = {"writeln", "write", "readln", "read", "length", "sqrt",
+               "abs", "ord", "chr", "succ", "pred", "trunc", "round"}
+
     def __init__(self):
         self.variables = {}
         self.constants = {}
@@ -46,13 +49,48 @@ class SemanticChecker(Visitor):
         """
         Rejestruje funkcje i ich typy zwracane w self.functions.
         Dzięki temu _infer_type może określić typ wywołania funkcji.
+        Typ zwracany jest zawsze przedostatnim dzieckiem (przed func_body).
         Przykład: 'function Add(a,b: integer): integer' → {'Add': 'integer'}
         """
         name = str(tree.children[0])
+        self.functions[name.lower()] = str(tree.children[-2]).lower()
+
+    def check_undeclared(self, tree):
+        """
+        Rekurencyjnie sprawdza czy wszystkie użyte nazwy zmiennych
+        są zadeklarowane w self.variables, self.constants lub self.functions.
+        Wywołaj po _collect_declarations.
+        """
+        if isinstance(tree, Token):
+            return
+
+        if tree.data == "assignment":
+            lval_tree = tree.children[0]
+            lval = str(lval_tree.children[0])
+            if (lval not in self.variables and
+                    lval not in self.constants and
+                    lval.lower() not in self.functions):
+                raise SemanticError(f"Błąd: niezadeklarowana zmienna '{lval}'")
+
+        if tree.data in ("func_call", "proc_call"):
+            name = str(tree.children[0]).lower()
+            if name not in self.functions and name not in self.BUILTIN:
+                raise SemanticError(f"Błąd: niezadeklarowana funkcja/procedura '{name}'")
+
+        if tree.data not in ("var_decl", "const_decl", "function_decl",
+                             "procedure_decl", "param_decl", "name_list",
+                             "program", "case_label"):
+            for child in tree.children:
+                if isinstance(child, Token) and child.type == "NAME":
+                    name = str(child)
+                    if (name not in self.variables and
+                            name not in self.constants and
+                            name.lower() not in self.functions):
+                        raise SemanticError(f"Błąd: niezadeklarowana zmienna '{name}'")
+
         for child in tree.children:
-            if isinstance(child, Token) and child.type == "TYPE":
-                self.functions[name] = str(child).lower()
-                return
+            if isinstance(child, Tree):
+                self.check_undeclared(child)
 
     def check_types(self, tree):
         """
@@ -63,6 +101,7 @@ class SemanticChecker(Visitor):
         assignment dla zmiennych globalnych byłoby sprawdzane przed ich rejestracją.
         """
         self._collect_declarations(tree)
+        self.check_undeclared(tree)
         self.visit(tree)
 
     def _collect_declarations(self, tree):
@@ -78,6 +117,20 @@ class SemanticChecker(Visitor):
             self.const_decl(tree)
         if tree.data == "function_decl":
             self.function_decl(tree)
+        if tree.data == "procedure_decl":
+            name = str(tree.children[0])
+            self.functions[name.lower()] = "void"
+        if tree.data == "param_decl":
+            name_list_tree = tree.children[0]
+            type_node = tree.children[1]
+            names = [str(child) for child in name_list_tree.children
+                     if isinstance(child, Token)]
+            if isinstance(type_node, Token):
+                ptype = str(type_node).lower()
+            else:
+                ptype = "array"
+            for name in names:
+                self.variables[name.strip()] = ptype
         for child in tree.children:
             if isinstance(child, Tree):
                 self._collect_declarations(child)
@@ -122,7 +175,7 @@ class SemanticChecker(Visitor):
         """
         if isinstance(node, Tree):
             if node.data == "func_call":
-                name = str(node.children[0])
+                name = str(node.children[0]).lower()
                 return self.functions.get(name)
             if node.data == "neg":
                 return self._infer_type(node.children[0])
@@ -195,3 +248,9 @@ class SemanticChecker(Visitor):
 
         for child in tree.children:
             self.check_breaks(child, in_loop, in_case)
+
+    def clear(self):
+        self.decision_tree = None
+        self.variables = {}
+        self.constants = {}
+        self.functions = {}

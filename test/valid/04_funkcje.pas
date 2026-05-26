@@ -96,7 +96,6 @@ begin
   wynik := Potega(2, 10);
 
   { Wywolania procedur }
-  Powitaj();
   Zamien(a, b);
   WypiszInfo('Jan', 25, 175.5);
 

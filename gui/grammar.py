@@ -82,7 +82,7 @@ class Grammar:
             raise Exception("No content to parse!")
 
         self.decision_tree = self.parser.parse(content)
-
+        self.checker.clear()
         self.checker.check_types(self.decision_tree)
         self.checker.check_breaks(self.decision_tree)
 
