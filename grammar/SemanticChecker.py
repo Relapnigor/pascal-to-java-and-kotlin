@@ -124,7 +124,7 @@ class SemanticChecker(Visitor):
                 raise SemanticError(f"Błąd: niezadeklarowana funkcja/procedura '{name}'")
 
         if tree.data not in ("var_decl", "const_decl", "function_decl",
-                             "procedure_decl", "param_decl", "name_list",
+                             "procedure_decl", "func_var_decl", "param_decl", "name_list",
                              "program", "case_label"):
             for child in tree.children:
                 if isinstance(child, Token) and child.type == "NAME":
@@ -182,6 +182,8 @@ class SemanticChecker(Visitor):
         if isinstance(tree, Token):
             return
         if tree.data == "var_decl":
+            self.var_decl(tree)
+        if tree.data == "func_var_decl":
             self.var_decl(tree)
         if tree.data == "const_decl":
             self.const_decl(tree)

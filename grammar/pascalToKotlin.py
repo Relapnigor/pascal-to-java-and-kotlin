@@ -192,6 +192,21 @@ class PascalToKotlin(Transformer):
     def var_section(self, c):
         return "\n".join(c)
 
+    def func_var_decl(self,c):
+        variables = str(c[0]).split(", ")
+        jtype = str(c[1])
+        m = re.match(r'^__ARRAY__(.+)__(\d+)__$', jtype)
+        if m:
+            base = m.group(1)
+            size = m.group(2)
+            variables = [f"var {v}: Array<{base}> = Array({size}) {{ 0 as {base} }}" for v in variables]
+        else:
+            variables = [f"var {v}: {jtype}" for v in variables]
+        return "\n".join(variables)
+
+    def func_var_section(self, c):
+        return "\n".join(c)
+
     def const_decl(self, c): return f"val {c[0]} = {c[1]}"
 
     def const_section(self,c): return "\n".join(c)

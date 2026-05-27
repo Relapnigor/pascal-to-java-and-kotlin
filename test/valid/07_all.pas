@@ -63,7 +63,6 @@ begin
   while b != 0 do
   begin
     a := a mod b;
-    { zamiana a i b bez zmiennej pomocniczej przez XOR-trick, tu prosto: }
     wynik := a;
     a := b;
     b := wynik;
@@ -138,27 +137,50 @@ end;
 
 begin
   n := 15;
+  WriteLn('=== Program Kompleksowy ===');
 
   { Wypelnij i posortuj tablice }
   WypelnijLosowo(n);
+  WriteLn('Tablica wypelniona.');
   SortujWstawkowe(n);
+  WriteLn('Tablica posortowana.');
+
+  { Wypisz posortowana tablice }
+  WriteLn('Elementy tablicy:');
+  for i := 1 to n do
+    WriteLn(dane[i]);
 
   { Statystyki }
   wynik := SumaZakresu(1, n);
+  WriteLn('Suma elementow:');
+  WriteLn(wynik);
+
   wynik := LiczPierwsze(n);
+  WriteLn('Liczba pierwszych w tablicy:');
+  WriteLn(wynik);
 
   { Test funkcji matematycznych }
   wynik := NWD(48, 18);
-  wynik := NWW(4, 6);
-  wynik := Silnia(7);
+  WriteLn('NWD(48, 18):');
+  WriteLn(wynik);
 
-  { Test CzyPierwsza dla zakresu }
+  wynik := NWW(4, 6);
+  WriteLn('NWW(4, 6):');
+  WriteLn(wynik);
+
+  wynik := Silnia(7);
+  WriteLn('Silnia(7):');
+  WriteLn(wynik);
+
+  { Test CzyPierwsza dla zakresu 2..50 }
   wynik := 0;
   for i := 2 to 50 do
   begin
     if CzyPierwsza(i) then
       wynik++;
   end;
+  WriteLn('Liczba pierwszych w zakresie 2..50:');
+  WriteLn(wynik);
 
   { Operacje na tablicy z case }
   for i := 1 to n do
@@ -169,6 +191,9 @@ begin
       2: dane[i] := dane[i] - 1;
     end;
   end;
+  WriteLn('Tablica po operacjach case:');
+  for i := 1 to n do
+    WriteLn(dane[i]);
 
   { Zlozony warunek z petla }
   i := 1;
@@ -183,13 +208,21 @@ begin
     end;
     i++;
   until (i > n) or (wynik > 500);
+  WriteLn('Wynik po petli repeat:');
+  WriteLn(wynik);
 
   { Uzycie Min i Max }
   wynik := dane[1];
   for i := 2 to n do
     wynik := Max(wynik, dane[i]);
+  WriteLn('Maksimum tablicy:');
+  WriteLn(wynik);
 
-  { Finalne obliczenie z wieloma wywolaniami }
+  { Finalne obliczenie }
   wynik := NWD(Silnia(4), Silnia(5)) + LiczPierwsze(n);
   wynik := Min(wynik, MAX_N);
+  WriteLn('Wynik finalny (max MAX_N):');
+  WriteLn(wynik);
+
+  WriteLn('=== Koniec ===');
 end.

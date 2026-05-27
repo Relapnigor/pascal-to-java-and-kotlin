@@ -66,7 +66,6 @@ begin
   { Dostep przez wyrazenie indeksowe }
   j := 3;
   tab[j] := tab[j - 1] + tab[j + 1];
-  tab[i * 2 - 1] := 0;
 
   { Tablica real }
   for i := 0 to 4 do

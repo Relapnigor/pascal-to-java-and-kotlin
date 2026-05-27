@@ -63,7 +63,6 @@ begin
 
   { Null }
   s := null;
-  r := null;
 
   { Wyrazenia mieszane }
   wynik_b := (i > 0) or (r < 0.0);

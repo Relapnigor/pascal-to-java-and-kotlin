@@ -47,7 +47,7 @@ class PascalToJava(Transformer):
     def int_div(self, c): return f"(int)({c[0]} / {c[1]})"
     def mod(self, c):   return f"{c[0]} % {c[1]}"
     def neg(self, c):   return f"-{c[0]}"
-    def pow(self, c):   return f"Math.pow({c[0]}, {c[1]})"
+    def pow(self, c):   return f"Math.pow({c[0]}, {c[2]})"
 
     # Conditions
 
@@ -136,13 +136,13 @@ class PascalToJava(Transformer):
         start = c[2]
         end   = c[3]
         body  = _indent(c[4])
-        return f"for (int {var} = {start}; {var} <= {end}; {var}++) {{\n{body}\n}}"
+        return f"for ({var} = {start}; {var} <= {end}; {var}++) {{\n{body}\n}}"
     def for_stmt_down(self, c):
         var   = c[0]
         start = c[2]
         end   = c[3]
         body  = _indent(c[4])
-        return f"for (int {var} = {start}; {var} >= {end}; {var}--) {{\n{body}\n}}"
+        return f"for ({var} = {start}; {var} >= {end}; {var}--) {{\n{body}\n}}"
 
     def repeat_statement(self, c):
         body = _indent(c[0])
@@ -218,13 +218,30 @@ class PascalToJava(Transformer):
         m = re.match(r'^__ARRAY__(.+)__(\d+)__$', jtype)
         if m:
             base = m.group(1)
+            size = int(m.group(2))
+            lines = [f"static {base}[] {v} = new {base}[{size + 1}]" for v in variables]
+        else:
+            lines = [f"static {jtype} {v}" for v in variables]
+        return ";\n".join(lines) + ";"
+
+    def func_var_decl(self, c):
+        variables = str(c[0]).split(", ")
+        jtype = str(c[1])
+        m = re.match(r'^__ARRAY__(.+)__(\d+)__$', jtype)
+        if m:
+            base = m.group(1)
             size = m.group(2)
             lines = [f"{base}[] {v} = new {base}[{size}]" for v in variables]
         else:
             lines = [f"{jtype} {v}" for v in variables]
         return ";\n".join(lines) + ";"
 
+
+
     def var_section(self, c):
+        return "\n".join(c)
+
+    def func_var_section(self, c):
         return "\n".join(c)
 
     def const_decl(self, c):

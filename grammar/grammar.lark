@@ -18,7 +18,10 @@ function_decl: "function" NAME "(" param_list? ")" ":" type ";" func_body ";"
 procedure_decl: "procedure" NAME "(" param_list? ")" ";" func_body ";"
 param_list: param_decl (";" param_decl)*
 param_decl: name_list ":" type
-func_body: var_section? inner_block
+func_body: func_var_section? inner_block
+
+func_var_section: "var" func_var_decl+
+func_var_decl: name_list ":" type ";"
 
 block: "begin" stmt_list? "end"
 inner_block: "begin" inner_stmt_list "end"
