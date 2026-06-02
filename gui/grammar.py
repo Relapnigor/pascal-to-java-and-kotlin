@@ -1,5 +1,4 @@
 from lark import Lark
-from grammar.SemanticChecker import SemanticChecker
 import sys
 import os
 

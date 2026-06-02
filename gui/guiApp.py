@@ -139,12 +139,14 @@ class GuiApp:
         self.textboxKotlin.tag_config("KEYWORD", foreground="orange")
         self.textboxKotlin.tag_config("NUMBER", foreground="cyan")
         self.textboxKotlin.tag_config("TYPE", foreground="#167ef5")
+        self.textboxKotlin.tag_config("CHAR", foreground="yellow")
 
     def color_java_config(self):
         self.textboxJava.tag_config("STRING", foreground="green")
         self.textboxJava.tag_config("KEYWORD", foreground="orange")
         self.textboxJava.tag_config("NUMBER", foreground="cyan")
         self.textboxJava.tag_config("TYPE", foreground="#167ef5")
+        self.textboxJava.tag_config("CHAR", foreground="yellow")
 
     def color_pascal(self, content):
         for token in self.grammar.get_pascal_tokens(content):

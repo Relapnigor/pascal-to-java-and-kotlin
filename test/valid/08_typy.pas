@@ -61,9 +61,6 @@ begin
   s := '';
   s := 'Pascal jest super';
 
-  { Null }
-  s := null;
-
   { Wyrazenia mieszane }
   wynik_b := (i > 0) or (r < 0.0);
   wynik_b := not (i = 0);

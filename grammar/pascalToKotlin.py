@@ -177,6 +177,17 @@ class PascalToKotlin(Transformer):
         elem = nums[2]
         return f"__ARRAY__{elem}__{size}__"
 
+    def type_init_mapping(self, type):
+        mapping = {
+            "Int": "0",
+            "Double": "0.0",
+            "String": '""',
+            "Char": "'A'",
+            "Boolean": "false",
+        }
+        return mapping[type]
+
+
     def var_decl(self,c):
         variables = str(c[0]).split(", ")
         jtype = str(c[1])
@@ -186,7 +197,8 @@ class PascalToKotlin(Transformer):
             size = m.group(2)
             variables = [f"var {v}: Array<{base}> = Array({size}) {{ 0 as {base} }}" for v in variables]
         else:
-            variables = [f"var {v}: {jtype}" for v in variables]
+            print(jtype)
+            variables = [f"var {v}: {jtype} = {self.type_init_mapping(jtype)}" for v in variables]
         return "\n".join(variables)
 
     def var_section(self, c):
@@ -246,18 +258,17 @@ class PascalToKotlin(Transformer):
         i = 0
         if childern[0][:3] == "val":
             if childern[1][:3] == "var":
-                childern[-1] = childern[-1].replace("{", f"{{\n{childern[1]}\n", 1)
                 i += 1
             childern[-1] = childern[-1].replace("{", f"{{\n{childern[0]}\n",1)
             i+=1
         elif childern[0][:3] == "var":
-            childern[-1] = childern[-1].replace("{", f"{{\n{childern[0]}\n",1)
             i += 1
 
         for index, child in enumerate(childern[i:]):
             childern[index + i] = child.replace("\n", "\n\t", child.count("\n")-1)
 
-        lista = "\n".join(childern[i:])
+        lista = "\n".join(childern[:i]) + "\n\n"
+        lista += "\n".join(childern[i:])
         return lista
 
     def program(self, c): return c[1]
