@@ -163,7 +163,7 @@ class PascalToKotlin(Transformer):
 
     def param_decl(self,c):
         variables = str(c[0]).split(", ")
-        variables = [v + f": {c[1]}" for v in variables]
+        variables = [str(v) + "_arg" + f": {c[1]}" for v in variables]
         result = ", ".join(variables)
         return result
 
@@ -225,6 +225,12 @@ class PascalToKotlin(Transformer):
 
     def func_body(self, c): return "\n".join(c) + "\n"
 
+    def new_variables_for_idiotic_kotlin_functions(self, variables):
+        result = ""
+        for var in variables:
+            result += f"var {var[:-4]} = {var}\n"
+        return result
+
     def function_decl(self,c):
         name = str(c[0])
         if len(c) == 3:
@@ -233,8 +239,10 @@ class PascalToKotlin(Transformer):
             body = str(c[2])
         else:
             args = c[1]
+            variables = [var.split(":",1)[0] for var in c[1].split(", ")]
+            created_vars = self.new_variables_for_idiotic_kotlin_functions(variables)
             returntype = c[2]
-            body = str(c[3])
+            body = created_vars + str(c[3])
 
         if f"{name} = " in body:
             body = body.replace(f"{name} =", "return")
@@ -247,7 +255,9 @@ class PascalToKotlin(Transformer):
             body = str(c[1])
         else:
             args = c[1]
-            body = str(c[2])
+            variables = [var.split(":", 1)[0] for var in c[1].split(", ")]
+            created_vars = self.new_variables_for_idiotic_kotlin_functions(variables)
+            body = created_vars + str(c[2])
 
         if f"{name} = " in body:
             body = body.replace(f"{name} =", "return")
