@@ -5,9 +5,9 @@ const
   ROZMIAR = 5;
 
 var
-  tab          : array[1..10] of integer;
+  tab          : array[0..10] of integer;
   macierz_a    : array[0..4] of real;
-  znaki        : array[1..5] of char;
+  znaki        : array[0..5] of char;
   tekst        : array[0..9] of string;
   i, j         : integer;
   suma, maks   : integer;

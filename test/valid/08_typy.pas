@@ -1,7 +1,7 @@
 program TypyDanych;
 
 const
-  PUSTO = null;
+  PUSTO = 6;
 
 var
   i        : integer;

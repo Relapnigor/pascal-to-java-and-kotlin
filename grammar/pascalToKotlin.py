@@ -182,7 +182,7 @@ class PascalToKotlin(Transformer):
             "Int": "0",
             "Double": "0.0",
             "String": '""',
-            "Char": "'A'",
+            "Char": "'0'",
             "Boolean": "false",
         }
         return mapping[type]
@@ -195,7 +195,7 @@ class PascalToKotlin(Transformer):
         if m:
             base = m.group(1)
             size = m.group(2)
-            variables = [f"var {v}: Array<{base}> = Array({size}) {{ 0 as {base} }}" for v in variables]
+            variables = [f"var {v}: Array<{base}> = Array({size}) {{ {self.type_init_mapping(base)} }}" for v in variables]
         else:
             print(jtype)
             variables = [f"var {v}: {jtype} = {self.type_init_mapping(jtype)}" for v in variables]

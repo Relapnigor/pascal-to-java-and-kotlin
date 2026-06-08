@@ -219,7 +219,7 @@ class PascalToJava(Transformer):
         if m:
             base = m.group(1)
             size = int(m.group(2))
-            lines = [f"static {base}[] {v} = new {base}[{size + 1}]" for v in variables]
+            lines = [f"static {base}[] {v} = new {base}[{size}]" for v in variables]
         else:
             lines = [f"static {jtype} {v}" for v in variables]
         return ";\n".join(lines) + ";"
