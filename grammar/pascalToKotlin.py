@@ -269,7 +269,6 @@ class PascalToKotlin(Transformer):
         if childern[0][:3] == "val":
             if childern[1][:3] == "var":
                 i += 1
-            childern[-1] = childern[-1].replace("{", f"{{\n{childern[0]}\n",1)
             i+=1
         elif childern[0][:3] == "var":
             i += 1
@@ -277,7 +276,9 @@ class PascalToKotlin(Transformer):
         for index, child in enumerate(childern[i:]):
             childern[index + i] = child.replace("\n", "\n\t", child.count("\n")-1)
 
-        lista = "\n".join(childern[:i]) + "\n\n"
+        lista = "\n".join(childern[:i])
+        if lista:
+            lista += "\n\n"
         lista += "\n".join(childern[i:])
         return lista
 

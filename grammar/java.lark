@@ -39,6 +39,7 @@ KEYWORD.3: /\bclass\b/
           | /\bimport\b/
           | /\bpackage\b/
           | /\bdefault\b/
+          | /\bfinal\b/
 
 TYPE.2: /\bint\b/
        | /\bbyte\b/

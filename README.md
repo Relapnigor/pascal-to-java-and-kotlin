@@ -176,3 +176,28 @@ Aplikację należy uruchomić poprzez wykonanie pliku `main.py` lub dostarczaneg
 - Wczytanie pliku źródłowego w formacie `.pas` za pomocą interfejsu graficznego.
 - Opcjonalne wprowadzenie lub edycja kodu bezpośrednio w oknie edytora aplikacji.
 - Pobranie wygenerowanych plików wynikowych w formacie `.java` i/lub `.kt`.
+
+---
+#### Wejście
+```pascal
+program Main;
+
+begin
+    writeln('Hello world');
+end.
+```
+#### Wyjście
+```kotlin
+fun main(args: Array<String>) {
+    println("Hello world");
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello world");
+    }
+}
+```
+Więcej przykładów w pliku: [przyklady.md](https://github.com/Relapnigor/pascal-to-java-and-kotlin/blob/main/przyklady.md)
